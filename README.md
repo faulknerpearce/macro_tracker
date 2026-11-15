@@ -165,6 +165,60 @@ Serves `dist/` and `functions/` on `http://localhost:8788`.
 
 Tokens expire (~1 hour); refresh after re-login.
 
+## Fitness tracker sync (Google Health)
+
+Input Output reads workouts, daily calories, steps and weight from the **Google Health API**
+(the cloud successor to the Fitbit Web API; the Google Fit REST API shuts down in 2026,
+and Health Connect is on-device only). Requires migration
+`packages/shared/migrations/0024_integrations_estimates_weight.sql`.
+
+1. In Google Cloud Console, create an OAuth client (Web application) and enable the
+   Google Health API. Authorized redirect URI:
+   `https://<your-domain>/api/integrations/google-health/callback`.
+2. Request the read-only scopes `googlehealth.activity_and_fitness.readonly` and
+   `googlehealth.health_metrics_and_measurements.readonly`. They are **Restricted**:
+   until Google's privacy and security review passes, only test users added to the
+   OAuth consent screen can connect.
+3. Add Cloudflare secrets:
+   ```sh
+   wrangler pages secret put GOOGLE_HEALTH_CLIENT_ID
+   wrangler pages secret put GOOGLE_HEALTH_CLIENT_SECRET
+   wrangler pages secret put INTEGRATION_ENCRYPTION_KEY   # 32+ random characters
+   ```
+
+How it works:
+
+- Me › Profile › Fitness tracker › **Connect Google Health** runs OAuth. Refresh tokens are
+  stored AES-GCM encrypted (`fitness_connections`); the key never leaves Cloudflare.
+- Sync runs when the dashboard opens (at most hourly), from **Sync now**, and from the MCP
+  tool `sync_fitness_tracker`. First sync backfills 14 days; a call covers up to 30.
+- A finished day's tracker total replaces BMR as that day's base. Today keeps BMR until the
+  day ends (a partial total would understate output). Synced workouts inside a device
+  total are flagged `counted_in_device_total`, so their calories aren't added twice.
+- Re-syncing updates workouts in place (matched on the Google data point name).
+
+Endpoints: `/api/integrations/google-health/{start,exchange,callback,status,sync,settings,disconnect}`.
+
+## Logging by conversation (MCP)
+
+The MCP server (`/mcp`) gives an LLM everything needed to log food and exercise from a
+conversation, including rough estimates:
+
+| Tool | Purpose |
+| --- | --- |
+| `get_user_context` | Age, sex, height, latest weight, BMR, goals, time zone, whether a weigh-in is due, tracker status, estimation guidance |
+| `add_food_entry` | Now records `logMethod` (`weighed` / `unit` / `estimate`), `confidence` and `estimateNotes` |
+| `search_food_history` | The user's past entries for a food ("my usual flat white") with typical calories |
+| `add_activity` | Omit `calories` and the server estimates them from duration, `intensity` and weight (MET-based, net of resting) |
+| `estimate_activity_calories` | The same estimate without logging |
+| `log_weight`, `get_weight_history` | Weigh-ins (kg or lb) and the smoothed trend; updates the BMR weight |
+| `snooze_weight_checkin`, `update_weight_checkin_settings` | Check-in cadence (weekly by default, 3–30 days) |
+| `get_fitness_tracker_status`, `sync_fitness_tracker` | Tracker connection and on-demand sync (hosted server only) |
+
+The server's `instructions` tell the LLM to call `get_user_context` first, mark estimates
+honestly, sync the tracker before hand-logging workouts, and ask for weight once when a
+check-in is due.
+
 ## Data model
 
 ```sql

@@ -15,6 +15,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNutritionGoals, useProfile } from '../context/useProfile'
 import { sectionHeader as sectionLabelStyle } from '../lib/styles'
 import DailyIoCard from '../components/dashboard/DailyIoCard'
+import WeightCheckinCard from '../components/dashboard/WeightCheckinCard'
 
 import TrendsPanel from '../components/dashboard/TrendsPanel'
 import DashboardPreviewList, { PreviewEmpty, PreviewRow } from '../components/DashboardPreviewList'
@@ -22,6 +23,7 @@ import PageHeader from '../components/layout/PageHeader'
 import { PageError, PageLoading } from '../components/layout/PageState'
 import { fetchActivities, type Activity } from '../lib/activities'
 import { fetchDailyEnergySnapshots } from '../lib/dailyEnergy'
+import { autoSyncIfStale } from '../lib/integrations'
 import {
   clearDeviceTotal,
   fetchDeviceTotal,
@@ -123,6 +125,20 @@ export default function Dashboard() {
   const [trendRows, setTrendRows] = useState<DailyEnergySnapshot[]>([])
   const [trendsLoading, setTrendsLoading] = useState(true)
   const [trendsError, setTrendsError] = useState<string | null>(null)
+  /** Bumped after a background tracker sync brings in new data, to refresh energy views. */
+  const [syncTick, setSyncTick] = useState(0)
+
+  useEffect(() => {
+    let cancelled = false
+    void autoSyncIfStale().then((summary) => {
+      if (!cancelled && summary && (summary.workoutsAdded || summary.calorieDays || summary.workoutsUpdated)) {
+        setSyncTick((n) => n + 1)
+      }
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const { bmr } = useMemo(() => resolveBmr(profile), [profile])
   const energyIsToday = energyDate === today
@@ -183,7 +199,7 @@ export default function Dashboard() {
     return () => {
       cancelled = true
     }
-  }, [energyDate, profile.usesWearable])
+  }, [energyDate, profile.usesWearable, syncTick])
 
   useEffect(() => {
     let cancelled = false
@@ -211,7 +227,7 @@ export default function Dashboard() {
     return () => {
       cancelled = true
     }
-  }, [trendsRange.start, trendsRange.end, bmr])
+  }, [trendsRange.start, trendsRange.end, bmr, syncTick])
 
   const goEnergyPrev = useCallback(() => {
     setEnergyDate((d) => shiftISODate(d, -1))
@@ -258,7 +274,7 @@ export default function Dashboard() {
   const energyActivityTotals = sumActivityTotals(energyActivities)
   const energyBalance = computeNetBalance(
     energyFoodTotals.calories,
-    energyActivityTotals.calories,
+    energyActivityTotals.additiveCalories,
     nutritionGoals.calories.low,
     nutritionGoals.calories.high,
     bmr,
@@ -274,6 +290,8 @@ export default function Dashboard() {
         title="Overview"
         description="Energy balance, multi-day trends, and today's food and activity."
       />
+
+      <WeightCheckinCard today={today} />
 
       <div style={{ marginBottom: 16 }}>
         <DailyIoCard

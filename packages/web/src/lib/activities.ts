@@ -64,9 +64,12 @@ async function requireUserId(): Promise<string> {
 }
 
 export async function fetchActivities(date: string = todayISO()): Promise<Activity[]> {
+  // Filter by owner: RLS also returns activities others shared with this user.
+  const userId = await requireUserId()
   const { data, error } = await supabase
     .from('activities')
     .select('*')
+    .eq('user_id', userId)
     .eq('activity_date', date)
     .order('created_at', { ascending: false })
   if (error) throw new Error(error.message)
@@ -77,9 +80,11 @@ export async function fetchActivityDaySummaries(daysBack = 30): Promise<Activity
   const today = todayISO()
   const startDate = offsetDateISO(daysBack)
 
+  const userId = await requireUserId()
   const { data, error } = await supabase
     .from('activities')
     .select('*')
+    .eq('user_id', userId)
     .gte('activity_date', startDate)
     .lte('activity_date', today)
     .order('activity_date', { ascending: false })

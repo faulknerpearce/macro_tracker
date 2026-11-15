@@ -9,6 +9,8 @@ import {
   type UserProfile,
 } from '@input_output/shared'
 import GoalsFormFields from '../components/GoalsFormFields'
+import DevicesSection from '../components/profile/DevicesSection'
+import WeightTrackingSection from '../components/profile/WeightTrackingSection'
 import Modal from '../components/Modal'
 import PageHeader from '../components/layout/PageHeader'
 import { PageLoading } from '../components/layout/PageState'
@@ -671,6 +673,10 @@ function ProfileForm({ profile, updateProfile, onSignOut }: ProfileFormProps) {
           </div>
         </div>
       </section>
+
+      <DevicesSection />
+
+      <WeightTrackingSection />
 
       <section className="day-accordion" style={{ padding: 24, marginBottom: 24 }}>
         <h3

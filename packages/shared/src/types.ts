@@ -73,17 +73,32 @@ export interface Activity {
   workoutId: string | null
   workoutSetsLogged: number | null
   exercises: ActivityExercise[]
+  /** Where the activity came from: typed in the app, logged via MCP, or synced from a tracker. */
+  source?: 'manual' | 'mcp' | 'google_health' | 'import'
+  /** True when a tracker's day total already includes these calories (don't add them again). */
+  countedInDeviceTotal?: boolean
+  logMethod?: 'device' | 'measured' | 'estimate' | null
 }
 
 export type NewActivity = Omit<
   Activity,
-  'id' | 'activityDate' | 'loggedAt' | 'workoutId' | 'workoutSetsLogged' | 'exercises'
+  | 'id'
+  | 'activityDate'
+  | 'loggedAt'
+  | 'workoutId'
+  | 'workoutSetsLogged'
+  | 'exercises'
+  | 'source'
+  | 'countedInDeviceTotal'
+  | 'logMethod'
 >
 export type ActivityWrite = NewActivity & { loggedAt?: string }
 export type UpdateActivity = Partial<NewActivity> & { loggedAt?: string }
 
 export type ActivityTotals = {
   calories: number
+  /** Calories that add on top of the day's base burn (excludes ones a tracker total already counts). */
+  additiveCalories: number
   movingTimeSeconds: number
   distanceMeters: number
 }

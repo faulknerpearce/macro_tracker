@@ -23,6 +23,7 @@ describe('sumActivityTotals', () => {
   it('returns zeros for an empty list', () => {
     expect(sumActivityTotals([])).toEqual({
       calories: 0,
+      additiveCalories: 0,
       movingTimeSeconds: 0,
       distanceMeters: 0,
     })
@@ -48,8 +49,18 @@ describe('sumActivityTotals', () => {
 
     expect(totals).toEqual({
       calories: 450,
+      additiveCalories: 450,
       movingTimeSeconds: 4200,
       distanceMeters: 5000,
     })
+  })
+
+  it('excludes calories a tracker day total already counts from additive calories', () => {
+    const totals = sumActivityTotals([
+      activity({ id: 'a', name: 'Synced run', calories: 400, countedInDeviceTotal: true }),
+      activity({ id: 'b', name: 'Manual lift', calories: 120 }),
+    ])
+    expect(totals.calories).toBe(520)
+    expect(totals.additiveCalories).toBe(120)
   })
 })

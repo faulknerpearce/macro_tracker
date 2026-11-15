@@ -1,10 +1,16 @@
 import type { NutritionGoals } from './goals.js'
 
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
 export type Database = {
   public: {
     Tables: {
       food_entries: {
         Row: {
+          log_method?: string | null
+          confidence?: string | null
+          estimate_notes?: string
+          logged_via?: string
           id: string
           user_id: string
           icon: string
@@ -27,6 +33,10 @@ export type Database = {
           reference_weight_grams: number | null
         }
         Insert: {
+          log_method?: string | null
+          confidence?: string | null
+          estimate_notes?: string
+          logged_via?: string
           id?: string
           user_id: string
           icon?: string
@@ -49,6 +59,10 @@ export type Database = {
           reference_weight_grams?: number | null
         }
         Update: {
+          log_method?: string | null
+          confidence?: string | null
+          estimate_notes?: string
+          logged_via?: string
           id?: string
           user_id?: string
           icon?: string
@@ -218,6 +232,14 @@ export type Database = {
       }
       activities: {
         Row: {
+          source?: string
+          external_id?: string | null
+          log_method?: string | null
+          intensity?: string | null
+          confidence?: string | null
+          estimate_notes?: string
+          counted_in_device_total?: boolean
+          synced_at?: string | null
           id: string
           user_id: string
           name: string
@@ -233,6 +255,14 @@ export type Database = {
           created_at: string
         }
         Insert: {
+          source?: string
+          external_id?: string | null
+          log_method?: string | null
+          intensity?: string | null
+          confidence?: string | null
+          estimate_notes?: string
+          counted_in_device_total?: boolean
+          synced_at?: string | null
           id?: string
           user_id: string
           name: string
@@ -248,6 +278,14 @@ export type Database = {
           created_at?: string
         }
         Update: {
+          source?: string
+          external_id?: string | null
+          log_method?: string | null
+          intensity?: string | null
+          confidence?: string | null
+          estimate_notes?: string
+          counted_in_device_total?: boolean
+          synced_at?: string | null
           id?: string
           user_id?: string
           name?: string
@@ -566,6 +604,9 @@ export type Database = {
       }
       profiles: {
         Row: {
+          weight_tracking?: boolean
+          weight_checkin_days?: number
+          weight_checkin_snoozed_until?: string | null
           id: string
           display_name: string
           nutrition_goals: NutritionGoals
@@ -579,6 +620,9 @@ export type Database = {
           created_at: string
         }
         Insert: {
+          weight_tracking?: boolean
+          weight_checkin_days?: number
+          weight_checkin_snoozed_until?: string | null
           id: string
           display_name: string
           nutrition_goals?: NutritionGoals
@@ -592,6 +636,9 @@ export type Database = {
           created_at?: string
         }
         Update: {
+          weight_tracking?: boolean
+          weight_checkin_days?: number
+          weight_checkin_snoozed_until?: string | null
           id?: string
           display_name?: string
           nutrition_goals?: NutritionGoals
@@ -794,6 +841,132 @@ export type Database = {
             referencedColumns: ['id']
           },
         ]
+      }
+      fitness_connections: {
+        Row: {
+          user_id: string
+          provider: string
+          status: string
+          scopes: string[]
+          external_user_id: string | null
+          refresh_token_ciphertext: string
+          access_token_ciphertext: string | null
+          access_token_expires_at: string | null
+          settings: Json
+          last_synced_at: string | null
+          last_sync_summary: Json | null
+          last_error: string | null
+          connected_at: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          provider: string
+          status?: string
+          scopes?: string[]
+          external_user_id?: string | null
+          refresh_token_ciphertext: string
+          access_token_ciphertext?: string | null
+          access_token_expires_at?: string | null
+          settings?: Json
+          last_synced_at?: string | null
+          last_sync_summary?: Json | null
+          last_error?: string | null
+          connected_at?: string
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          provider?: string
+          status?: string
+          scopes?: string[]
+          external_user_id?: string | null
+          refresh_token_ciphertext?: string
+          access_token_ciphertext?: string | null
+          access_token_expires_at?: string | null
+          settings?: Json
+          last_synced_at?: string | null
+          last_sync_summary?: Json | null
+          last_error?: string | null
+          connected_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      daily_metrics: {
+        Row: {
+          user_id: string
+          metric_date: string
+          device_total_kcal: number | null
+          steps: number | null
+          water_ml: number | null
+          resting_hr: number | null
+          source: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          metric_date: string
+          device_total_kcal?: number | null
+          steps?: number | null
+          water_ml?: number | null
+          resting_hr?: number | null
+          source?: string
+          updated_at?: string
+        }
+        Update: {
+          user_id?: string
+          metric_date?: string
+          device_total_kcal?: number | null
+          steps?: number | null
+          water_ml?: number | null
+          resting_hr?: number | null
+          source?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      body_measurements: {
+        Row: {
+          id: string
+          user_id: string
+          measured_on: string
+          measured_at: string
+          weight_kg: number | string | null
+          body_fat_pct: number | string | null
+          waist_cm: number | string | null
+          source: string
+          note: string
+          external_id: string | null
+          logged_via: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          measured_on: string
+          measured_at?: string
+          weight_kg?: number | string | null
+          body_fat_pct?: number | string | null
+          waist_cm?: number | string | null
+          source?: string
+          note?: string
+          external_id?: string | null
+          logged_via?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          measured_on?: string
+          measured_at?: string
+          weight_kg?: number | string | null
+          body_fat_pct?: number | string | null
+          waist_cm?: number | string | null
+          source?: string
+          note?: string
+          external_id?: string | null
+          logged_via?: string
+        }
+        Relationships: []
       }
     }
     Views: Record<string, never>
