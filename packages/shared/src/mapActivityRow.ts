@@ -20,5 +20,15 @@ export function mapActivityRow(row: ActivityRow): Activity {
           ? row.workout_sets_logged
           : Number.parseFloat(String(row.workout_sets_logged)),
     exercises: [],
+    source: parseSource(row.source),
+    countedInDeviceTotal: row.counted_in_device_total === true,
+    logMethod:
+      row.log_method === 'device' || row.log_method === 'measured' || row.log_method === 'estimate'
+        ? row.log_method
+        : null,
   }
+}
+
+function parseSource(raw: unknown): Activity['source'] {
+  return raw === 'mcp' || raw === 'google_health' || raw === 'import' ? raw : 'manual'
 }

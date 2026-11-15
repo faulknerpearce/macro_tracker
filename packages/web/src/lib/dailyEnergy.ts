@@ -26,9 +26,12 @@ export async function fetchDailyEnergySnapshots(
       .eq('user_id', userId)
       .gte('entry_date', startDate)
       .lte('entry_date', endDate),
+    // '*' so this works before and after migration 0024 (counted_in_device_total);
+    // filtered by owner because RLS also returns activities shared with this user.
     supabase
       .from('activities')
-      .select('activity_date, calories')
+      .select('*')
+      .eq('user_id', userId)
       .gte('activity_date', startDate)
       .lte('activity_date', endDate),
     fetchDeviceTotalsByDate(startDate, endDate),
@@ -44,6 +47,8 @@ export async function fetchDailyEnergySnapshots(
 
   const activityByDate: Record<string, number> = {}
   for (const row of activityResult.data ?? []) {
+    // Tracker workouts already inside that day's device total aren't added again.
+    if (row.counted_in_device_total === true) continue
     activityByDate[row.activity_date] =
       (activityByDate[row.activity_date] ?? 0) + (row.calories ?? 0)
   }

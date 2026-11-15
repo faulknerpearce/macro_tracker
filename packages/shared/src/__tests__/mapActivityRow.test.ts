@@ -31,6 +31,9 @@ describe('mapActivityRow', () => {
       workoutId: null,
       workoutSetsLogged: null,
       exercises: [],
+      source: 'manual',
+      countedInDeviceTotal: false,
+      logMethod: null,
     })
   })
 })

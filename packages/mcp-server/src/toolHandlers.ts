@@ -18,8 +18,11 @@ import {
   sumTotals,
   type ActivityUpdate,
   type FoodUpdate,
+  estimateActivityCalories,
+  parseIntensity,
 } from '@input_output/shared'
 import type { InputOutputSupabase } from './supabase.js'
+import { activityProvenance, foodProvenance, isMissingProvenanceColumn } from './provenance.js'
 
 export type ToolArgs = Record<string, unknown>
 
@@ -90,9 +93,17 @@ export async function addFoodEntryForDate(
     ...(loggedAt?.ok ? { created_at: loggedAt.value } : {}),
     ...(portion ? buildPortionPayload(portion) : {}),
   }
-  const { data, error } = await supabase.from('food_entries').insert(entry).select().single()
+  let { data, error } = await supabase
+    .from('food_entries')
+    .insert({ ...entry, ...foodProvenance(args) })
+    .select()
+    .single()
+  // Before migration 0024 the provenance columns don't exist: save the entry without them.
+  if (error && isMissingProvenanceColumn(error)) {
+    ;({ data, error } = await supabase.from('food_entries').insert(entry).select().single())
+  }
   if (error) throw error
-  return mapRow(data)
+  return mapRow(data!)
 }
 
 export async function updateFoodEntry(supabase: InputOutputSupabase, args: ToolArgs) {
@@ -209,13 +220,60 @@ export async function addActivityForDate(
   const loggedAt = args.loggedAt === undefined ? undefined : parseLoggedAt(args.loggedAt)
   if (loggedAt && !loggedAt.ok) throw new Error(loggedAt.error)
 
+  // No calories given: estimate them from the user's weight (MET-based, net of resting).
+  let estimate: ReturnType<typeof estimateActivityCalories> | null = null
+  if (parsed.value.calories === null && args.estimateCalories !== false) {
+    const weightKg = await fetchLatestWeightKg(supabase, userId)
+    estimate = estimateActivityCalories({
+      activityType: parsed.value.activityType,
+      durationMinutes: parsed.value.movingTimeSeconds / 60,
+      weightKg,
+      intensity: parseIntensity(args.intensity),
+      met: typeof args.met === 'number' ? args.met : null,
+      distanceKm: parsed.value.distanceMeters === null ? null : parsed.value.distanceMeters / 1000,
+    })
+    parsed.value.calories = estimate.calories
+  }
+
   const activity = {
     ...buildActivityInsertPayload(parsed.value, crypto.randomUUID(), userId, date),
     ...(loggedAt?.ok ? { created_at: loggedAt.value } : {}),
   }
-  const { data, error } = await supabase.from('activities').insert(activity).select().single()
+  const provenance = activityProvenance(
+    args,
+    estimate ? { logMethod: 'estimate', notes: estimate.assumptions.join(' ') } : {},
+  )
+  let { data, error } = await supabase
+    .from('activities')
+    .insert({ ...activity, ...provenance, ...(estimate ? { confidence: estimate.confidence } : {}) })
+    .select()
+    .single()
+  if (error && isMissingProvenanceColumn(error)) {
+    ;({ data, error } = await supabase.from('activities').insert(activity).select().single())
+  }
   if (error) throw error
-  return mapActivityRow(data)
+  const mapped = mapActivityRow(data!)
+  return estimate ? { ...mapped, caloriesEstimate: estimate } : mapped
+}
+
+/** Latest weight from history if available, else the profile's weight. */
+export async function fetchLatestWeightKg(
+  supabase: InputOutputSupabase,
+  userId: string,
+): Promise<number | null> {
+  const history = await supabase
+    .from('body_measurements')
+    .select('weight_kg')
+    .eq('user_id', userId)
+    .not('weight_kg', 'is', null)
+    .order('measured_on', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  const fromHistory = history.error ? null : Number(history.data?.weight_kg)
+  if (fromHistory && Number.isFinite(fromHistory)) return fromHistory
+  const { data } = await supabase.from('profiles').select('weight_kg').eq('id', userId).maybeSingle()
+  const w = Number(data?.weight_kg)
+  return Number.isFinite(w) && w > 0 ? w : null
 }
 
 export async function updateActivity(supabase: InputOutputSupabase, args: ToolArgs) {

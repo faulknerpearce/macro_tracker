@@ -15,6 +15,7 @@
     "../mcp-server/src/http.ts",
     "../mcp-server/src/server.ts",
     "../mcp-server/src/schema.ts",
-    "../mcp-server/src/oauth/**/*.ts"
+    "../mcp-server/src/oauth/**/*.ts",
+    "../mcp-server/src/integrations/**/*.ts"
   ]
 }

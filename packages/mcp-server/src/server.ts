@@ -42,7 +42,21 @@ import {
   saveIngredient,
 } from './ingredientHandlers.js'
 
+import {
+  estimateActivityForUser,
+  getUserContext,
+  getWeightHistory,
+  logWeight,
+  searchFoodHistory,
+  snoozeWeightCheckin,
+  syncFitnessTracker,
+  updateWeightCheckinSettings,
+} from './contextHandlers.js'
+import { getFitnessConnectionStatus, type IntegrationEnv } from './integrations/fitnessSync.js'
+import { LLM_ESTIMATION_GUIDE } from '@input_output/shared'
+
 export { createAuthenticatedSupabase, type InputOutputSupabase } from './supabase.js'
+export type { IntegrationEnv } from './integrations/fitnessSync.js'
 
 /** JSON Schema object inputs — strict shape Grok and other MCP clients expect. */
 function objectSchema(
@@ -93,6 +107,21 @@ const foodFields = {
     type: 'number',
     description: 'Gram weight that the logged macro totals are based on',
   },
+  logMethod: {
+    type: 'string',
+    enum: ['weighed', 'unit', 'estimate', 'recipe', 'barcode'],
+    description:
+      'How the amount was known: weighed (grams on a scale), unit (a labelled or standard unit like 1 bar, 2 slices, 1 cup), or estimate (described portion; you estimated the macros).',
+  },
+  confidence: {
+    type: 'string',
+    enum: ['high', 'medium', 'low'],
+    description: 'Your confidence in the macros. Defaults from logMethod (weighed=high, unit=medium, estimate=low).',
+  },
+  estimateNotes: {
+    type: 'string',
+    description: 'For estimates: the portion and reference you assumed, e.g. "~1.5 cups cooked pasta, marinara, 1 tbsp parmesan".',
+  },
 }
 
 const activityFields = {
@@ -114,7 +143,24 @@ const activityFields = {
     description: 'Optional average heart rate in bpm',
   },
   maxHeartrate: { type: 'number', description: 'Optional max heart rate in bpm' },
-  calories: { type: 'number', description: 'Optional calories burned' },
+  calories: {
+    type: 'number',
+    description:
+      'Calories burned. Omit to have the server estimate them from duration, intensity and the user\'s weight.',
+  },
+  intensity: {
+    type: 'string',
+    enum: ['light', 'moderate', 'vigorous'],
+    description: 'Effort level; used when estimating calories (default moderate).',
+  },
+  met: { type: 'number', description: 'Optional MET value if you know a better one for the exact activity.' },
+  logMethod: {
+    type: 'string',
+    enum: ['device', 'measured', 'estimate'],
+    description: 'device = numbers from a watch/app, measured = user timed it, estimate = rough recollection.',
+  },
+  confidence: { type: 'string', enum: ['high', 'medium', 'low'] },
+  estimateNotes: { type: 'string', description: 'What you assumed, e.g. "45 min yard work, moderate".' },
 }
 
 async function resolveLogDateArg(supabase: InputOutputSupabase, value: unknown): Promise<string> {
@@ -138,7 +184,7 @@ async function resolveRequiredLogDateArg(
 }
 
 export const SERVER_NAME = 'input_output'
-export const SERVER_VERSION = '1.3.0'
+export const SERVER_VERSION = '1.4.0'
 
 export const tools: Tool[] = [
   {
@@ -492,9 +538,95 @@ export const tools: Tool[] = [
       ['workoutId'],
     ),
   },
+  {
+    name: 'get_user_context',
+    description:
+      'Input Output: call first. Returns the user\'s age, sex, height, latest weight, BMR, nutrition goals, today\'s date and time zone, whether a weight check-in is due, fitness tracker status, and guidance for estimating food and exercise.',
+    inputSchema: objectSchema({}),
+  },
+  {
+    name: 'search_food_history',
+    description:
+      'Input Output: find foods the user has logged before by name (e.g. "flat white"), with how often, their latest macros and typical calories. Reuse these numbers for "my usual" requests.',
+    inputSchema: objectSchema(
+      {
+        query: { type: 'string', description: 'Part of the food name' },
+        limit: { type: 'number', description: 'Max results (default 8)' },
+      },
+      ['query'],
+    ),
+  },
+  {
+    name: 'estimate_activity_calories',
+    description:
+      'Input Output: estimate calories burned (net of resting) for an activity from duration, intensity, optional distance, and the user\'s weight. Use before add_activity when the user doesn\'t know calories.',
+    inputSchema: objectSchema(
+      {
+        activityType: { type: 'string', description: 'Run, Ride, Swim, Walk, Hike, Workout, or Other' },
+        durationMinutes: { type: 'number', description: 'Duration in minutes' },
+        intensity: { type: 'string', enum: ['light', 'moderate', 'vigorous'] },
+        distanceKm: { type: 'number', description: 'Optional distance in km (improves run/walk estimates)' },
+        met: { type: 'number', description: 'Optional MET override' },
+      },
+      ['activityType', 'durationMinutes'],
+    ),
+  },
+  {
+    name: 'log_weight',
+    description:
+      'Input Output: record a body weight measurement (kg or lb). Updates the profile weight used for BMR and estimates.',
+    inputSchema: objectSchema(
+      {
+        weight: { type: 'number', description: 'Weight value' },
+        unit: { type: 'string', enum: ['kg', 'lb'], description: 'Unit of weight (default kg)' },
+        date: dateProperty,
+        bodyFatPct: { type: 'number', description: 'Optional body fat percentage' },
+        note: { type: 'string', description: 'Optional note (e.g. "morning, after coffee")' },
+      },
+      ['weight'],
+    ),
+  },
+  {
+    name: 'get_weight_history',
+    description: 'Input Output: weight measurements and the smoothed trend over the last N days.',
+    inputSchema: objectSchema({ days: { type: 'number', description: 'Days to include (default 90)' } }),
+  },
+  {
+    name: 'snooze_weight_checkin',
+    description: 'Input Output: postpone the weight check-in reminder (1–7 days, default 2) when the user declines.',
+    inputSchema: objectSchema({ days: { type: 'number', description: 'Days to snooze' } }),
+  },
+  {
+    name: 'update_weight_checkin_settings',
+    description:
+      'Input Output: turn weight tracking reminders on or off and set how often to ask (3–30 days; weekly recommended).',
+    inputSchema: objectSchema({
+      enabled: { type: 'boolean' },
+      intervalDays: { type: 'number', description: 'Days between check-ins' },
+    }),
+  },
+  {
+    name: 'get_fitness_tracker_status',
+    description: 'Input Output: whether a fitness tracker (Google Health) is connected, its sync settings and last sync.',
+    inputSchema: objectSchema({}),
+  },
+  {
+    name: 'sync_fitness_tracker',
+    description:
+      'Input Output: pull workouts, daily calories, steps and weight from the connected fitness tracker (Google Health). Defaults to everything since the last sync. Call before adding a workout by hand to avoid duplicates.',
+    inputSchema: objectSchema({
+      startDate: { type: 'string', description: 'Optional YYYY-MM-DD start (max 30 days back)' },
+      endDate: { type: 'string', description: 'Optional YYYY-MM-DD end (default today)' },
+    }),
+  },
 ]
 
-export function createServer(supabase: InputOutputSupabase): Server {
+export interface CreateServerOptions {
+  /** Enables tracker sync from MCP (hosted server only: needs OAuth client + encryption key). */
+  integrationEnv?: IntegrationEnv
+}
+
+export function createServer(supabase: InputOutputSupabase, options: CreateServerOptions = {}): Server {
   const foodTools = tools
     .filter(
       (t) =>
@@ -520,7 +652,7 @@ export function createServer(supabase: InputOutputSupabase): Server {
   const ingredientTools = tools
     .filter((t) => t.name.includes('ingredient') && (t.name.endsWith('_ingredient') || t.name === 'list_ingredients'))
     .map((t) => t.name)
-  const instructions = `input output tools for food inputs, saved recipes, a reusable ingredient catalog, saved workouts, and activity outputs. Food: ${foodTools.join(', ')}. Recipes: ${recipeTools.join(', ')}. Ingredients: ${ingredientTools.join(', ')}. Workouts: ${workoutTools.join(', ')}. Activities: ${activityTools.join(', ')}. Use log_recipe or add_food_entry to log meals; log_workout or add_activity for outputs. Recipes can reference catalog ingredients by ingredientId with gram-based macros. All data is scoped to the signed-in user.`
+  const instructions = `input output tools for food inputs, saved recipes, a reusable ingredient catalog, saved workouts, and activity outputs. Food: ${foodTools.join(', ')}. Recipes: ${recipeTools.join(', ')}. Ingredients: ${ingredientTools.join(', ')}. Workouts: ${workoutTools.join(', ')}. Activities: ${activityTools.join(', ')}. Use log_recipe or add_food_entry to log meals; log_workout or add_activity for outputs. Recipes can reference catalog ingredients by ingredientId with gram-based macros. Weight: log_weight, get_weight_history. Fitness tracker: sync_fitness_tracker. All data is scoped to the signed-in user.\n\nHow to estimate:\n${LLM_ESTIMATION_GUIDE}`
 
   const server = new Server(
     { name: SERVER_NAME, version: SERVER_VERSION },
@@ -681,6 +813,51 @@ export function createServer(supabase: InputOutputSupabase): Server {
         case 'log_workout': {
           const activity = await logWorkoutEntry(supabase, a)
           return { content: [{ type: 'text', text: JSON.stringify(activity) }] }
+        }
+
+        case 'get_user_context': {
+          const result = await getUserContext(supabase, options.integrationEnv)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'search_food_history': {
+          const result = await searchFoodHistory(supabase, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'estimate_activity_calories': {
+          const result = await estimateActivityForUser(supabase, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'log_weight': {
+          const result = await logWeight(supabase, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'get_weight_history': {
+          const result = await getWeightHistory(supabase, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'snooze_weight_checkin': {
+          const result = await snoozeWeightCheckin(supabase, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'update_weight_checkin_settings': {
+          const result = await updateWeightCheckinSettings(supabase, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'get_fitness_tracker_status': {
+          const result = await getFitnessConnectionStatus(supabase)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
+        }
+
+        case 'sync_fitness_tracker': {
+          const result = await syncFitnessTracker(supabase, options.integrationEnv, a)
+          return { content: [{ type: 'text', text: JSON.stringify(result) }] }
         }
 
         default:

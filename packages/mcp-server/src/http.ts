@@ -8,6 +8,10 @@ export interface McpEnv {
   /** Public origin for OAuth metadata, e.g. https://input-output.pages.dev */
   MCP_PUBLIC_URL: string
   OAUTH_SIGNING_SECRET?: string
+  /** Optional: enables sync_fitness_tracker on the hosted server. */
+  GOOGLE_HEALTH_CLIENT_ID?: string
+  GOOGLE_HEALTH_CLIENT_SECRET?: string
+  INTEGRATION_ENCRYPTION_KEY?: string
 }
 
 function extractBearerToken(request: Request): string | null {
@@ -92,7 +96,15 @@ export async function handleMcp(request: Request, env: McpEnv): Promise<Response
     sessionIdGenerator: undefined,
     enableJsonResponse: true,
   })
-  const server = createServer(supabase)
+  const server = createServer(supabase, {
+    integrationEnv: {
+      GOOGLE_HEALTH_CLIENT_ID: env.GOOGLE_HEALTH_CLIENT_ID,
+      GOOGLE_HEALTH_CLIENT_SECRET: env.GOOGLE_HEALTH_CLIENT_SECRET,
+      INTEGRATION_ENCRYPTION_KEY: env.INTEGRATION_ENCRYPTION_KEY,
+      OAUTH_SIGNING_SECRET: env.OAUTH_SIGNING_SECRET,
+      PUBLIC_URL: publicUrl(request, env) ?? undefined,
+    },
+  })
 
   await server.connect(transport)
   try {
