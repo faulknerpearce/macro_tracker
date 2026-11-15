@@ -38,7 +38,7 @@ function callbackPage(url: URL): Response {
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Connecting…</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="font-family:system-ui,sans-serif;padding:40px;text-align:center">Finishing Google Health connection…
-<script>try{sessionStorage.setItem('bodyio.googleHealthOAuth',${escapeForScript(payload)})}catch(e){}
+<script>try{sessionStorage.setItem('macro-tracker.googleHealthOAuth',${escapeForScript(payload)})}catch(e){}
 location.replace('/#/profile');</script></body></html>`
   return new Response(html, {
     headers: {

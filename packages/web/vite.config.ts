@@ -19,7 +19,7 @@ export default defineConfig(({ command, mode }) => {
     const missing = REQUIRED_BUILD_VARS.filter((key) => !env[key] && !process.env[key])
     if (missing.length > 0) {
       throw new Error(
-        `Missing build variables: ${missing.join(', ')}. Set them in Cloudflare (Workers & Pages > macro-tracker > Settings > Variables and Secrets) or in packages/web/.env.`,
+        `Missing build variables: ${missing.join(', ')}. Set them in [vars] in the repo-root wrangler.toml or in packages/web/.env.`,
       )
     }
   }

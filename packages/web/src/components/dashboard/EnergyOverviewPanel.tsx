@@ -349,7 +349,7 @@ export default function EnergyOverviewPanel({
                 <span className="energy-overview-net-value">{balance.net.toLocaleString()}</span>
                 <span className="energy-overview-net-unit">kcal net</span>
               </div>
-              <div className="energy-overview-io energy-overview-io-stacked">
+              <div className="energy-overview-balance energy-overview-balance-stacked">
                 <span>
                   <strong>{balance.consumed.toLocaleString()}</strong> in
                 </span>

@@ -39,8 +39,8 @@ file_size_limit = "50MiB"
 
 [auth]
 enabled = true
-site_url = "https://macro-tracker.pages.dev"
-additional_redirect_urls = ["https://macro-tracker.pages.dev", "https://macro-tracker.pages.dev/**"]
+site_url = "https://macro-tracker-app.pages.dev"
+additional_redirect_urls = ["https://macro-tracker-app.pages.dev", "https://macro-tracker-app.pages.dev/**"]
 jwt_expiry = 3600
 enable_refresh_token_rotation = true
 refresh_token_reuse_interval = 10

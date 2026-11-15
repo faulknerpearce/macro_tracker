@@ -14,7 +14,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNutritionGoals, useProfile } from '../context/useProfile'
 import { sectionHeader as sectionLabelStyle } from '../lib/styles'
-import DailyIoCard from '../components/dashboard/DailyIoCard'
+import DailyBalanceCard from '../components/dashboard/DailyBalanceCard'
 import WeightCheckinCard from '../components/dashboard/WeightCheckinCard'
 
 import TrendsPanel from '../components/dashboard/TrendsPanel'
@@ -294,7 +294,7 @@ export default function Dashboard() {
       <WeightCheckinCard today={today} />
 
       <div style={{ marginBottom: 16 }}>
-        <DailyIoCard
+        <DailyBalanceCard
           balance={energyBalance}
           date={energyDate}
           isToday={energyIsToday}

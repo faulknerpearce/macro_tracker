@@ -67,7 +67,7 @@ Connect `faulknerpearce/macro_tracker` with these build settings (repo root):
 
 The repo-root `wrangler.toml` and `functions/` wrappers exist so Git builds find Pages Functions (`/mcp`, OAuth) without changing the monorepo layout.
 
-**Build-time env vars:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — add them as plain-text variables in Cloudflare (Settings → Variables and Secrets). They are not in `wrangler.toml`, and `vite build` fails if they are missing, so a misconfigured project never replaces the live site.
+**Build-time env vars:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — they live in `[vars]` in the repo-root `wrangler.toml`, because Pages does not pass dashboard plain-text variables to the build while that file exists. `vite build` fails if they are missing, so a misconfigured project never replaces the live site.
 
 **Runtime secrets:** `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `OAUTH_SIGNING_SECRET`
 
@@ -89,15 +89,15 @@ Enable Email auth and set Site URL / redirect URLs in the Supabase dashboard.
 
 ```sh
 npx wrangler login
-npx wrangler pages project create macro-tracker --production-branch main
+npx wrangler pages project create macro-tracker-app --production-branch main
 ```
 
 ### 3. Secrets
 
 ```sh
-npx wrangler pages secret put SUPABASE_URL          --project-name macro-tracker
-npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name macro-tracker
-npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker
+npx wrangler pages secret put SUPABASE_URL          --project-name macro-tracker-app
+npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name macro-tracker-app
+npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker-app
 # openssl rand -base64 32
 ```
 
@@ -107,7 +107,7 @@ npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker
 export VITE_SUPABASE_URL=https://<your-project>.supabase.co
 export VITE_SUPABASE_ANON_KEY=<anon-key>
 npm run build
-cd packages/web && npx wrangler pages deploy dist --project-name macro-tracker --branch main
+cd packages/web && npx wrangler pages deploy dist --project-name macro-tracker-app --branch main
 ```
 
 ### 5. Connect Grok (custom MCP connector)
