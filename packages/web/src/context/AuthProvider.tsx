@@ -148,7 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Exact Site URL. A trailing slash is a different allow-list entry, and Supabase
     // then falls back to the project Site URL instead of the page that sent the request.
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: 'https://macro-tracker.pages.dev',
+      redirectTo: 'https://macro-tracker-app.pages.dev',
     })
     return { error: error?.message ?? null }
   }, [])

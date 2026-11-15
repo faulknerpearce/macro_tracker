@@ -65,7 +65,7 @@ describe('handleGoogleHealthRequest', () => {
     )
     const html = await res.text()
     expect(res.headers.get('content-type')).toMatch(/text\/html/)
-    expect(html).toContain("sessionStorage.setItem('bodyio.googleHealthOAuth'")
+    expect(html).toContain("sessionStorage.setItem('macro-tracker.googleHealthOAuth'")
     expect(html).not.toContain('</script>"')
     expect(html).toContain("location.replace('/#/profile')")
   })

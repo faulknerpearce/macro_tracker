@@ -2,7 +2,7 @@ import type { FitnessSyncSettings } from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 const BASE = '/api/integrations/google-health'
-const OAUTH_STORAGE_KEY = 'bodyio.googleHealthOAuth'
+const OAUTH_STORAGE_KEY = 'macro-tracker.googleHealthOAuth'
 /** Auto-sync at most this often when the app opens. */
 const AUTO_SYNC_INTERVAL_MS = 60 * 60 * 1000
 

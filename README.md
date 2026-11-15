@@ -118,11 +118,11 @@ Grok and other OAuth-capable MCP clients use the built-in OAuth 2.1 + PKCE flow 
 
 ```sh
 npx wrangler login
-npx wrangler pages project create macro-tracker --production-branch main
+npx wrangler pages project create macro-tracker-app --production-branch main
 
-npx wrangler pages secret put SUPABASE_URL          --project-name macro-tracker
-npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name macro-tracker
-npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker
+npx wrangler pages secret put SUPABASE_URL          --project-name macro-tracker-app
+npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name macro-tracker-app
+npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker-app
 ```
 
 Set build-time vars before `npm run build` (embedded in the client bundle):
@@ -136,7 +136,7 @@ export VITE_SUPABASE_ANON_KEY=<anon-key>
 
 ```sh
 npm run build
-npx wrangler pages deploy packages/web/dist --project-name macro-tracker --branch main
+npx wrangler pages deploy packages/web/dist --project-name macro-tracker-app --branch main
 ```
 
 ### Routes exposed

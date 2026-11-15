@@ -23,7 +23,7 @@ interface ChartSeries {
 /**
  * Series colors follow zone language: deep input green, output amber.
  * Green is darker than amber so 30-day (line-only) charts stay clear in grayscale.
- * Target: thin blue (DailyIoCard).
+ * Target: thin blue (DailyBalanceCard).
  */
 const SERIES: ChartSeries[] = [
   {

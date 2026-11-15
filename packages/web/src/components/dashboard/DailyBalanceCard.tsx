@@ -13,7 +13,7 @@ import DayNavigator from '../layout/DayNavigator'
 import Card from '../ui/Card'
 import DeviceTotalControl from './DeviceTotalControl'
 
-interface DailyIoCardProps {
+interface DailyBalanceCardProps {
   balance: NetBalance
   date: string
   isToday: boolean
@@ -36,7 +36,7 @@ function pctOfMax(value: number, max: number): number {
 }
 
 /** Badge: net in goal → blue; else I vs O comparison (zone colors). */
-function ioStatusBadge(balance: NetBalance): {
+function balanceStatusBadge(balance: NetBalance): {
   label: string
   color: string
   background: string
@@ -69,7 +69,7 @@ function ioStatusBadge(balance: NetBalance): {
   }
 }
 
-export default function DailyIoCard({
+export default function DailyBalanceCard({
   balance,
   date,
   isToday,
@@ -82,7 +82,7 @@ export default function DailyIoCard({
   usesWearable = false,
   onSaveDeviceTotal,
   onClearDeviceTotal,
-}: DailyIoCardProps) {
+}: DailyBalanceCardProps) {
   const isMobile = useMediaQuery('(max-width: 639px)')
   const { consumed, burned, goalLow, goalHigh, bmr } = balance
   const target = Math.round((goalLow + goalHigh) / 2)
@@ -101,7 +101,7 @@ export default function DailyIoCard({
     [consumed, burned, target, bmrLine],
   )
 
-  const status = ioStatusBadge(balance)
+  const status = balanceStatusBadge(balance)
   const inputH = pctOfMax(consumed, chartMax)
   const outputH = pctOfMax(burned, chartMax)
   const targetBottom = pctOfMax(target, chartMax)
