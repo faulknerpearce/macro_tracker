@@ -1,6 +1,6 @@
 # Proposed migrations (not applied)
 
-Drafted 2026-11-15 from a review of the live Supabase project (Input/Output). See the
+Drafted 2026-11-15 from a review of the live Supabase project (Macro Tracker). See the
 "Body IO — Database review & optimization plan" doc for the reasoning.
 
 | File | What | Risk |
