@@ -1,4 +1,4 @@
-import type { NutritionGoals } from '@input_output/shared'
+import type { NutritionGoals } from '@macro_tracker/shared'
 import { useEffect, useRef, useState } from 'react'
 import { GOAL_FIELDS, parseGoalField, type GoalKey } from '../lib/goalsForm'
 import { inputBase, labelBase } from '../lib/styles'

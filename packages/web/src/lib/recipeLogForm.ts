@@ -6,7 +6,7 @@ import {
   type PortionUnit,
   type RecipeSummary,
   type Totals,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 
 export interface RecipeLogFieldValues {
   entryDate: string

@@ -4,19 +4,17 @@
 #
 # For local `wrangler pages dev` runs, use packages/web/wrangler.toml —
 # both files share the same compatibility settings.
-name = "input-output"
+name = "macro-tracker"
 compatibility_date = "2025-01-15"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = "packages/web/dist"
 
-# SUPABASE_URL, SUPABASE_ANON_KEY, and OAUTH_SIGNING_SECRET are encrypted
-# Cloudflare secrets. Set them with:
-#   wrangler pages secret put SUPABASE_URL
-#   wrangler pages secret put SUPABASE_ANON_KEY
-#   wrangler pages secret put OAUTH_SIGNING_SECRET
+# No [vars] here on purpose: with a [vars] block this file becomes the source of
+# truth for variables and the dashboard can't edit them. Set everything in
+# Cloudflare: Workers & Pages > macro-tracker > Settings > Variables and Secrets.
 #
-# VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are build-time vars for the
-# client bundle (set in CI or locally before `npm run build`).
-[vars]
-VITE_SUPABASE_URL = "https://vqfgprypqcplfceigwur.supabase.co"
-VITE_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxZmdwcnlwcWNwbGZjZWlnd3VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxNTQ5ODIsImV4cCI6MjA5NzczMDk4Mn0.7aThBYnXbuaV8ZMX_YWUs210rqU0cWqpqbLcVyZf3kc"
+# Build-time (plain text, needed by `vite build`; the build fails if missing):
+#   VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY
+# Runtime secrets (encrypted):
+#   SUPABASE_URL, SUPABASE_ANON_KEY, OAUTH_SIGNING_SECRET
+#   GOOGLE_HEALTH_CLIENT_ID, GOOGLE_HEALTH_CLIENT_SECRET, INTEGRATION_ENCRYPTION_KEY

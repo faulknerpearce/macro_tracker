@@ -1,4 +1,4 @@
-import type { RecipeSummary } from '@input_output/shared'
+import type { RecipeSummary } from '@macro_tracker/shared'
 
 export type RecipeSortOption =
   | 'name-asc'

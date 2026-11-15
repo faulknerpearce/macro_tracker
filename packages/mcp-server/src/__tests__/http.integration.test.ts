@@ -100,7 +100,7 @@ describe('handleMcp HTTP integration', () => {
           tools: expect.any(Object),
         }),
         serverInfo: {
-          name: 'input_output',
+          name: 'macro_tracker',
           version: '1.4.0',
         },
       },

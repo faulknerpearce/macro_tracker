@@ -18,7 +18,7 @@ import {
   type WorkoutInput,
   type WorkoutSummary,
   type WorkoutWithExercises,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { markWorkoutShareSaved } from './sharing'
 import { supabase } from './supabase'
 

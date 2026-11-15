@@ -9,7 +9,7 @@ import {
   type Activity,
   type ActivityWrite,
   type WorkoutSummary,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { fetchWorkoutSummaries } from '../lib/workouts'
 import { focusIfDesktop } from '../lib/device'
 import { inputBase, labelBase } from '../lib/styles'

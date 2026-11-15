@@ -4,7 +4,7 @@ import {
   GOOGLE_OAUTH_TOKEN_URL,
   dailyRollUpBody,
   exerciseFilter,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 
 export interface GoogleOAuthClientEnv {
   GOOGLE_HEALTH_CLIENT_ID: string

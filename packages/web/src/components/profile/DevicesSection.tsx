@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { FitnessSyncSettings } from '@input_output/shared'
+import type { FitnessSyncSettings } from '@macro_tracker/shared'
 import Alert from '../ui/Alert'
 import ZoneButton from '../layout/ZoneButton'
 import {
@@ -88,7 +88,7 @@ export default function DevicesSection() {
       </h3>
       <p style={{ fontSize: 13, color: '#71717a', margin: '0 0 20px 0' }}>
         Connect Google Health (Fitbit, Pixel Watch and apps that write to it) to bring in workouts,
-        daily calories, steps and weight automatically. Input Output only reads your data.
+        daily calories, steps and weight automatically. Macro Tracker only reads your data.
       </p>
 
       {message && (
@@ -175,7 +175,7 @@ export default function DevicesSection() {
               variant="danger"
               disabled={busy !== null}
               onClick={() => {
-                if (!window.confirm('Disconnect Google Health? Data already synced stays in Input Output.')) return
+                if (!window.confirm('Disconnect Google Health? Data already synced stays in Macro Tracker.')) return
                 void run('disconnect', async () => {
                   await disconnectFitnessTracker()
                   setStatus(await fetchFitnessStatus())

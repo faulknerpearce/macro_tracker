@@ -1,4 +1,4 @@
-import { validateDeviceTotalKcal } from '@input_output/shared'
+import { validateDeviceTotalKcal } from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 async function requireUserId(): Promise<string> {

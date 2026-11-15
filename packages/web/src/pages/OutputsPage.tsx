@@ -1,4 +1,4 @@
-import { formatDayLabel, shiftISODate, sumActivityTotals, todayISO } from '@input_output/shared'
+import { formatDayLabel, shiftISODate, sumActivityTotals, todayISO } from '@macro_tracker/shared'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import AddActivityModal from '../components/AddActivityModal'
 import ActivityLogSection from '../components/ActivityLogSection'

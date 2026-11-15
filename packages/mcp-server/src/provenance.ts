@@ -6,7 +6,7 @@ import {
   parseFoodLogMethod,
   parseIntensity,
   type Database,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 
 type FoodInsert = Database['public']['Tables']['food_entries']['Insert']
 type ActivityInsert = Database['public']['Tables']['activities']['Insert']

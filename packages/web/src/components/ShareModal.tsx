@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { ShareUserResult } from '@input_output/shared'
+import type { ShareUserResult } from '@macro_tracker/shared'
 import {
   fetchActivitySharesForResource,
   fetchEntrySharesForResource,

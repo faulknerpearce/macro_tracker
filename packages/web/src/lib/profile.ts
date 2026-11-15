@@ -4,7 +4,7 @@ import {
   mapProfileRow,
   type ProfileUpdate,
   type UserProfile,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 export type { ProfileUpdate, UserProfile }

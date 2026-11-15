@@ -1,4 +1,4 @@
-import { buildDailyEnergySnapshots, type DailyEnergySnapshot } from '@input_output/shared'
+import { buildDailyEnergySnapshots, type DailyEnergySnapshot } from '@macro_tracker/shared'
 import { fetchDeviceTotalsByDate } from './deviceTotals'
 import { supabase } from './supabase'
 

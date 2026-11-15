@@ -1,6 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import { handleMcp } from '@input_output/mcp-server/http'
+import { handleMcp } from '@macro_tracker/mcp-server/http'
 import { resolveOAuthEnv, type PagesOAuthEnv } from '../_oauth-env'
 
 interface McpPagesEnv extends PagesOAuthEnv {

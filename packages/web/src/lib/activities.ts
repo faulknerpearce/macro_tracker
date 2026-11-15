@@ -12,7 +12,7 @@ import {
   type Activity,
   type ActivityTotals,
   type ActivityWrite,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { markActivityShareSaved } from './sharing'
 import { supabase } from './supabase'
 

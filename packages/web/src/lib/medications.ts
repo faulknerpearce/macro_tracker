@@ -13,7 +13,7 @@ import {
   type MedicationDoseDaySummary,
   type MedicationDoseInput,
   type MedicationInput,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 export type { Medication, MedicationDose, MedicationDoseDaySummary, MedicationDoseInput, MedicationInput }

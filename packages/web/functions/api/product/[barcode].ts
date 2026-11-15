@@ -1,6 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import { lookupOpenFoodFactsProduct, normalizeBarcodeParam } from '@input_output/shared'
+import { lookupOpenFoodFactsProduct, normalizeBarcodeParam } from '@macro_tracker/shared'
 
 export const onRequest: PagesFunction = async (context) => {
   const barcode = normalizeBarcodeParam(context.params.barcode)

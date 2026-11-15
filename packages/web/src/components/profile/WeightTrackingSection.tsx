@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { todayISOInTimeZone, WEIGHT_CHECKIN_OPTIONS } from '@input_output/shared'
+import { todayISOInTimeZone, WEIGHT_CHECKIN_OPTIONS } from '@macro_tracker/shared'
 import Alert from '../ui/Alert'
 import { useProfile } from '../../context/useProfile'
 import { inputBase, labelBase } from '../../lib/styles'
@@ -40,7 +40,7 @@ export default function WeightTrackingSection() {
         Weight check-ins
       </h3>
       <p style={{ fontSize: 13, color: '#71717a', margin: '0 0 20px 0' }}>
-        Input Output asks for your weight on a schedule so BMR and activity estimates stay accurate. Weekly is
+        Macro Tracker asks for your weight on a schedule so BMR and activity estimates stay accurate. Weekly is
         usually best: day-to-day readings mostly reflect water, not progress.
       </p>
 

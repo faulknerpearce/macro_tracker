@@ -1,6 +1,6 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import { handleGoogleHealthRequest } from '@input_output/mcp-server/integrations'
+import { handleGoogleHealthRequest } from '@macro_tracker/mcp-server/integrations'
 import type { PagesOAuthEnv } from '../../../_oauth-env'
 
 interface IntegrationPagesEnv extends PagesOAuthEnv {

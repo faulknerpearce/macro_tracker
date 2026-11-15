@@ -1,4 +1,4 @@
-import type { FitnessSyncSettings } from '@input_output/shared'
+import type { FitnessSyncSettings } from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 const BASE = '/api/integrations/google-health'

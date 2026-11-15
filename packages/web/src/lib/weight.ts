@@ -5,7 +5,7 @@ import {
   summarizeWeightTrend,
   type WeightCheckinStatus,
   type WeightTrend,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 export const LB_PER_KG = 2.20462

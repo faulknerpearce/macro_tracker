@@ -5,6 +5,6 @@
 // The same payload is also served at `/.well-known/mcp/schema` for clients that
 // follow the RFC 8615 sub-resource convention.
 
-import { handlePublicToolSchema } from '@input_output/mcp-server/schema'
+import { handlePublicToolSchema } from '@macro_tracker/mcp-server/schema'
 
 export const onRequest = async () => handlePublicToolSchema()

@@ -4,7 +4,7 @@ import {
   DEFAULT_PROFILE_GENDER,
   DEFAULT_TIMEZONE,
   type UserProfile,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import type { User } from '@supabase/supabase-js'
 import type { ReactElement, ReactNode } from 'react'
 import { AuthContext, type AuthContextValue } from '../context/auth-context'

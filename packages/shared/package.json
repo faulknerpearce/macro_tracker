@@ -1,5 +1,5 @@
 {
-  "name": "@input_output/shared",
+  "name": "@macro_tracker/shared",
   "version": "0.0.0",
   "private": true,
   "type": "module",

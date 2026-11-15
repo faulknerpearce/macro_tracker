@@ -3,7 +3,7 @@ import {
   formatDuration,
   sumActivityTotals,
   type Activity,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 
 export interface ActivityMetricConfig {
   label: string

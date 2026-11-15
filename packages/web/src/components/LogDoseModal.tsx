@@ -7,7 +7,7 @@ import {
   type Medication,
   type MedicationDose,
   type MedicationDoseInput,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { focusIfDesktop } from '../lib/device'
 import {
   inputBase,

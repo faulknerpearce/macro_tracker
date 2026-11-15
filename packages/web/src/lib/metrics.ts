@@ -3,7 +3,7 @@ import {
   sumTotals,
   type FoodEntry,
   type NutritionGoals,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import type { MetricConfig } from '../components/MetricCard'
 
 const fmtInt = (n: number) => n.toLocaleString()

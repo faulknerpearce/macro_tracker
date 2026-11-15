@@ -1,4 +1,4 @@
-# Input Output
+# Macro Tracker
 
 A single-page daily-nutrition dashboard with per-user accounts, backed by Supabase Auth + RLS, and a companion MCP server for AI agents.
 
@@ -16,7 +16,7 @@ This is an **npm workspaces** monorepo. There is one lockfile at the root and on
 ## Repository layout
 
 ```
-input_output/
+macro_tracker/
 ├── package.json              # npm workspaces root
 ├── tsconfig.base.json        # shared compiler options (strict)
 ├── .env.example              # Supabase URL + anon key
@@ -88,7 +88,7 @@ input_output/
 | `npm run lint`                    | ESLint on the web package                                       |
 | `npm run test`                    | Run the vitest suite in `packages/shared`                       |
 | `npm run format` / `format:check` | Apply / verify Prettier formatting                              |
-| `npm run build:shared`            | Compile `@input_output/shared` to `dist/`                  |
+| `npm run build:shared`            | Compile `@macro_tracker/shared` to `dist/`                  |
 
 ## Architecture
 
@@ -118,11 +118,11 @@ Grok and other OAuth-capable MCP clients use the built-in OAuth 2.1 + PKCE flow 
 
 ```sh
 npx wrangler login
-npx wrangler pages project create input-output --production-branch main
+npx wrangler pages project create macro-tracker --production-branch main
 
-npx wrangler pages secret put SUPABASE_URL          --project-name input-output
-npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name input-output
-npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name input-output
+npx wrangler pages secret put SUPABASE_URL          --project-name macro-tracker
+npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name macro-tracker
+npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker
 ```
 
 Set build-time vars before `npm run build` (embedded in the client bundle):
@@ -136,7 +136,7 @@ export VITE_SUPABASE_ANON_KEY=<anon-key>
 
 ```sh
 npm run build
-npx wrangler pages deploy packages/web/dist --project-name input-output --branch main
+npx wrangler pages deploy packages/web/dist --project-name macro-tracker --branch main
 ```
 
 ### Routes exposed
@@ -167,7 +167,7 @@ Tokens expire (~1 hour); refresh after re-login.
 
 ## Fitness tracker sync (Google Health)
 
-Input Output reads workouts, daily calories, steps and weight from the **Google Health API**
+Macro Tracker reads workouts, daily calories, steps and weight from the **Google Health API**
 (the cloud successor to the Fitbit Web API; the Google Fit REST API shuts down in 2026,
 and Health Connect is on-device only). Requires migration
 `packages/shared/migrations/0024_integrations_estimates_weight.sql`.

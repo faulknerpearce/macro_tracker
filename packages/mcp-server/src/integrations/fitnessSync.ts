@@ -10,10 +10,10 @@ import {
   todayISOInTimeZone,
   type FitnessSyncSettings,
   type MappedTrackerWorkout,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { signPayload, verifyPayload } from '../oauth/crypto.js'
-import type { Json } from '@input_output/shared'
-import type { InputOutputSupabase } from '../supabase.js'
+import type { Json } from '@macro_tracker/shared'
+import type { MacroTrackerSupabase } from '../supabase.js'
 import { fetchUserTimeZone, requireUserId } from '../toolHandlers.js'
 import {
   dailyRollUp,
@@ -90,7 +90,7 @@ interface ConnectState {
 
 /** Step 1: a signed state ties the Google consent screen back to this user. */
 export async function startGoogleHealthConnect(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   env: IntegrationEnv | undefined,
 ): Promise<{ url: string }> {
   const ready = requireEnv(env)
@@ -111,7 +111,7 @@ export async function startGoogleHealthConnect(
 
 /** Step 2: the signed-in web app posts back the code Google returned. */
 export async function completeGoogleHealthConnect(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   env: IntegrationEnv | undefined,
   args: { code: string; state: string },
   fetchImpl: typeof fetch = fetch,
@@ -123,7 +123,7 @@ export async function completeGoogleHealthConnect(
 
   const tokens = await exchangeAuthorizationCode(ready, args.code, googleHealthRedirectUri(ready), fetchImpl)
   if (!tokens.refresh_token) {
-    throw new Error('Google did not return a refresh token. Remove Input Output under your Google Account > Security > Third-party access, then connect again.')
+    throw new Error('Google did not return a refresh token. Remove Macro Tracker under your Google Account > Security > Third-party access, then connect again.')
   }
   const granted = tokens.scope ? tokens.scope.split(' ') : [...GOOGLE_HEALTH_SCOPES]
 
@@ -162,7 +162,7 @@ export interface FitnessConnectionStatus {
   connectedAt: string | null
 }
 
-export async function getFitnessConnectionStatus(supabase: InputOutputSupabase): Promise<FitnessConnectionStatus> {
+export async function getFitnessConnectionStatus(supabase: MacroTrackerSupabase): Promise<FitnessConnectionStatus> {
   const userId = await requireUserId(supabase)
   const { data, error } = await supabase
     .from('fitness_connections')
@@ -184,7 +184,7 @@ export async function getFitnessConnectionStatus(supabase: InputOutputSupabase):
 }
 
 export async function updateFitnessSyncSettings(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   patch: Partial<FitnessSyncSettings>,
 ): Promise<FitnessConnectionStatus> {
   const current = await getFitnessConnectionStatus(supabase)
@@ -202,7 +202,7 @@ export async function updateFitnessSyncSettings(
 
 /** Revokes Google access and removes stored tokens. Synced history is kept. */
 export async function disconnectGoogleHealth(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   env: IntegrationEnv | undefined,
   fetchImpl: typeof fetch = fetch,
 ): Promise<{ disconnected: true }> {
@@ -245,7 +245,7 @@ export interface FitnessSyncSummary {
 }
 
 async function getAccessToken(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   env: ReadyEnv,
   userId: string,
   row: { refresh_token_ciphertext: string; access_token_ciphertext: string | null; access_token_expires_at: string | null },
@@ -277,7 +277,7 @@ function clampRange(start: string, end: string): { start: string; end: string } 
 }
 
 export async function syncGoogleHealth(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   env: IntegrationEnv | undefined,
   opts: { startDate?: string; endDate?: string } = {},
   fetchImpl: typeof fetch = fetch,
@@ -294,7 +294,7 @@ export async function syncGoogleHealth(
     .eq('provider', FITNESS_PROVIDER)
     .maybeSingle()
   if (connError) throw new Error(isMissingTable(connError) ? MIGRATION_HINT : connError.message)
-  if (!conn) throw new Error('No fitness tracker connected. Connect Google Health in Input Output > Profile > Fitness tracker.')
+  if (!conn) throw new Error('No fitness tracker connected. Connect Google Health in Macro Tracker > Profile > Fitness tracker.')
 
   const settings = parseFitnessSyncSettings(conn.settings)
   const lastDay = conn.last_synced_at ? todayISOInTimeZone(timeZone, new Date(conn.last_synced_at)) : null
@@ -419,7 +419,7 @@ export async function syncGoogleHealth(
  * (shares and exercises reference it), so this is select-then-write, not an upsert.
  */
 async function upsertTrackerWorkouts(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   userId: string,
   workouts: MappedTrackerWorkout[],
   countedInDeviceTotal: (date: string) => boolean,

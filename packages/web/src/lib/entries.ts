@@ -12,7 +12,7 @@ import {
   type FoodEntry,
   type FoodEntryWrite,
   type Totals,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { markEntryShareSaved } from './sharing'
 import { supabase } from './supabase'
 

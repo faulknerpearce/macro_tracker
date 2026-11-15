@@ -19,7 +19,7 @@ Summary of the Cloudflare Pages setup and deploy steps after multi-user auth.
 
 ### Pages Functions (`packages/web/functions/`)
 
-- `mcp/[[path]].ts` — wraps `handleMcp` from `@input_output/mcp-server/http`
+- `mcp/[[path]].ts` — wraps `handleMcp` from `@macro_tracker/mcp-server/http`
 - `authorize.ts`, `token.ts`, `register.ts` — OAuth endpoints
 - `.well-known/oauth-*` — MCP OAuth metadata
 - `.well-known/mcp.ts` — non-standard MCP discovery probe (returns the public tool manifest)
@@ -50,12 +50,12 @@ npm run typecheck
 npm run lint
 npm test
 npm run build
-npm run build -w @input_output/mcp-server
+npm run build -w @macro_tracker/mcp-server
 ```
 
 ## Cloudflare Pages (GitHub)
 
-Connect `faulknerpearce/input_output` with these build settings (repo root):
+Connect `faulknerpearce/macro_tracker` with these build settings (repo root):
 
 | Setting                | Value                                                                   |
 | ---------------------- | ----------------------------------------------------------------------- |
@@ -67,7 +67,7 @@ Connect `faulknerpearce/input_output` with these build settings (repo root):
 
 The repo-root `wrangler.toml` and `functions/` wrappers exist so Git builds find Pages Functions (`/mcp`, OAuth) without changing the monorepo layout.
 
-**Build-time env vars:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
+**Build-time env vars:** `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` — add them as plain-text variables in Cloudflare (Settings → Variables and Secrets). They are not in `wrangler.toml`, and `vite build` fails if they are missing, so a misconfigured project never replaces the live site.
 
 **Runtime secrets:** `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `OAUTH_SIGNING_SECRET`
 
@@ -89,15 +89,15 @@ Enable Email auth and set Site URL / redirect URLs in the Supabase dashboard.
 
 ```sh
 npx wrangler login
-npx wrangler pages project create input-output --production-branch main
+npx wrangler pages project create macro-tracker --production-branch main
 ```
 
 ### 3. Secrets
 
 ```sh
-npx wrangler pages secret put SUPABASE_URL          --project-name input-output
-npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name input-output
-npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name input-output
+npx wrangler pages secret put SUPABASE_URL          --project-name macro-tracker
+npx wrangler pages secret put SUPABASE_ANON_KEY     --project-name macro-tracker
+npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name macro-tracker
 # openssl rand -base64 32
 ```
 
@@ -107,7 +107,7 @@ npx wrangler pages secret put OAUTH_SIGNING_SECRET  --project-name input-output
 export VITE_SUPABASE_URL=https://<your-project>.supabase.co
 export VITE_SUPABASE_ANON_KEY=<anon-key>
 npm run build
-cd packages/web && npx wrangler pages deploy dist --project-name input-output --branch main
+cd packages/web && npx wrangler pages deploy dist --project-name macro-tracker --branch main
 ```
 
 ### 5. Connect Grok (custom MCP connector)
@@ -115,7 +115,7 @@ cd packages/web && npx wrangler pages deploy dist --project-name input-output --
 1. Deploy and set all three secrets above.
 2. In Grok, go to [grok.com/connectors](https://grok.com/connectors) → **New Connector** → **Custom**.
 3. MCP server URL: `https://<your-pages-domain>/mcp`
-4. Grok discovers OAuth metadata, opens `/authorize`, and prompts you to sign in with your Input Output account.
+4. Grok discovers OAuth metadata, opens `/authorize`, and prompts you to sign in with your Macro Tracker account.
 5. After authorization, Grok stores the Supabase access token and calls MCP tools on your behalf.
 
 ### 6. Connect other MCP clients

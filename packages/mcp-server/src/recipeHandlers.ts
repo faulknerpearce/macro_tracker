@@ -14,8 +14,8 @@ import {
   type RecipeInput,
   type RecipeSummary,
   type RecipeWithIngredients,
-} from '@input_output/shared'
-import type { InputOutputSupabase } from './supabase.js'
+} from '@macro_tracker/shared'
+import type { MacroTrackerSupabase } from './supabase.js'
 import { fetchUserTimeZone } from './toolHandlers.js'
 import { requireUserId } from './toolHandlers.js'
 
@@ -34,7 +34,7 @@ function toSummary(
   }
 }
 
-export async function listRecipes(supabase: InputOutputSupabase): Promise<RecipeSummary[]> {
+export async function listRecipes(supabase: MacroTrackerSupabase): Promise<RecipeSummary[]> {
   const { data: recipes, error } = await supabase
     .from('recipes')
     .select('*')
@@ -64,7 +64,7 @@ export async function listRecipes(supabase: InputOutputSupabase): Promise<Recipe
 }
 
 export async function getRecipe(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   recipeId: string,
 ): Promise<RecipeWithIngredients> {
   const { data: recipeRow, error } = await supabase
@@ -94,7 +94,7 @@ export async function getRecipe(
 }
 
 async function replaceRecipeIngredients(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   recipeId: string,
   userId: string,
   ingredients: RecipeInput['ingredients'],
@@ -155,7 +155,7 @@ function parseRecipeInput(args: RecipeToolArgs): RecipeInput {
 }
 
 export async function saveRecipe(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   args: RecipeToolArgs,
 ): Promise<RecipeWithIngredients> {
   const input = parseRecipeInput(args)
@@ -192,13 +192,13 @@ export async function saveRecipe(
   return getRecipe(supabase, recipeId)
 }
 
-export async function deleteRecipe(supabase: InputOutputSupabase, recipeId: string) {
+export async function deleteRecipe(supabase: MacroTrackerSupabase, recipeId: string) {
   const { error } = await supabase.from('recipes').delete().eq('id', recipeId)
   if (error) throw error
   return { ok: true as const }
 }
 
-export async function logRecipeEntry(supabase: InputOutputSupabase, args: RecipeToolArgs) {
+export async function logRecipeEntry(supabase: MacroTrackerSupabase, args: RecipeToolArgs) {
   if (typeof args.recipeId !== 'string' && typeof args.recipe_id !== 'string') {
     throw new Error('recipeId is required')
   }

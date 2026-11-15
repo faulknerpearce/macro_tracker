@@ -4,7 +4,7 @@ import {
   shiftISODate,
   sumTotals,
   todayISOInTimeZone,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNutritionGoals, useProfile } from '../context/useProfile'
 import AddEntryModal from '../components/AddEntryModal'
@@ -178,7 +178,7 @@ export default function InputsPage({
   async function persistLogRecipe(
     recipeId: string,
     options: {
-      portionUnit: import('@input_output/shared').PortionUnit
+      portionUnit: import('@macro_tracker/shared').PortionUnit
       portionQuantity: number
       servingWeightGrams?: number
       loggedAt?: string

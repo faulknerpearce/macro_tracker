@@ -1,4 +1,4 @@
-import type { RecipeShareRecord } from '@input_output/shared'
+import type { RecipeShareRecord } from '@macro_tracker/shared'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'

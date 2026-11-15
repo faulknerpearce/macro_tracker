@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { RecipeSummary } from '@input_output/shared'
+import type { RecipeSummary } from '@macro_tracker/shared'
 import {
   filterAndSortRecipes,
   filterRecipesForPicker,

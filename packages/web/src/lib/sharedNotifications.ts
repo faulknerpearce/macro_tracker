@@ -5,7 +5,7 @@ import {
   fetchWorkoutsSharedWithMe,
 } from './sharing'
 
-const SEEN_KEY = 'input-output-shared-seen-at'
+const SEEN_KEY = 'macro-tracker-shared-seen-at'
 
 export function getSharedSeenAt(): string | null {
   try {

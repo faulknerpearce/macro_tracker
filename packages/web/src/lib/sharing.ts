@@ -22,7 +22,7 @@ import {
   type ShareUserResult,
   type WorkoutShareRecord,
   type WorkoutSummary,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { supabase } from './supabase'
 
 export interface SharedRecipeItem {

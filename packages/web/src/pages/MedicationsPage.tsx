@@ -10,7 +10,7 @@ import {
   type MedicationDoseDaySummary,
   type MedicationDoseInput,
   type MedicationInput,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import CatalogRow from '../components/layout/CatalogRow'
 import DayNavigator from '../components/layout/DayNavigator'

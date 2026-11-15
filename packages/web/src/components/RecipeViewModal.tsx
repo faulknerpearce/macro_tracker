@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { RecipeWithIngredients } from '@input_output/shared'
+import type { RecipeWithIngredients } from '@macro_tracker/shared'
 import { fetchRecipe } from '../lib/recipes'
 import {
   catalogItemCard,

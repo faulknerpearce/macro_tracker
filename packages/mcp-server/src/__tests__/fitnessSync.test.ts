@@ -3,7 +3,7 @@ import { decryptToken, encryptToken } from '../integrations/tokenCrypto.js'
 import { syncGoogleHealth, type IntegrationEnv } from '../integrations/fitnessSync.js'
 import { handleGoogleHealthRequest } from '../integrations/http.js'
 import { activityProvenance, foodProvenance, isMissingProvenanceColumn } from '../provenance.js'
-import type { InputOutputSupabase } from '../supabase.js'
+import type { MacroTrackerSupabase } from '../supabase.js'
 
 const KEY = 'test-encryption-key-that-is-at-least-32-chars'
 
@@ -110,7 +110,7 @@ function fakeSupabase(tables: Record<string, Record<string, unknown>[]>) {
   const client = {
     from,
     auth: { getUser: async () => ({ data: { user: { id: 'u1' } }, error: null }) },
-  } as unknown as InputOutputSupabase
+  } as unknown as MacroTrackerSupabase
   return { client, calls }
 }
 

@@ -2,7 +2,7 @@ import {
   DEFAULT_NUTRITION_GOALS,
   type GoalRange,
   type NutritionGoals,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 
 export type GoalKey = keyof NutritionGoals
 

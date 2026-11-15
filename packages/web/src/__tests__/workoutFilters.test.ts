@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { WorkoutSummary } from '@input_output/shared'
+import type { WorkoutSummary } from '@macro_tracker/shared'
 import { filterAndSortWorkouts, workoutMatchesQuery } from '../lib/workoutFilters'
 
 function workout(

@@ -17,8 +17,8 @@ import {
   type WorkoutInput,
   type WorkoutSummary,
   type WorkoutWithExercises,
-} from '@input_output/shared'
-import type { InputOutputSupabase } from './supabase.js'
+} from '@macro_tracker/shared'
+import type { MacroTrackerSupabase } from './supabase.js'
 import { fetchUserTimeZone, requireUserId } from './toolHandlers.js'
 
 export type WorkoutToolArgs = Record<string, unknown>
@@ -33,7 +33,7 @@ function toSummary(
   }
 }
 
-export async function listWorkouts(supabase: InputOutputSupabase): Promise<WorkoutSummary[]> {
+export async function listWorkouts(supabase: MacroTrackerSupabase): Promise<WorkoutSummary[]> {
   const { data: workouts, error } = await supabase
     .from('workouts')
     .select('*')
@@ -65,7 +65,7 @@ export async function listWorkouts(supabase: InputOutputSupabase): Promise<Worko
 }
 
 export async function getWorkout(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   workoutId: string,
 ): Promise<WorkoutWithExercises> {
   const { data: workoutRow, error } = await supabase
@@ -92,7 +92,7 @@ export async function getWorkout(
 }
 
 async function replaceWorkoutExercises(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   workoutId: string,
   userId: string,
   exercises: WorkoutInput['exercises'],
@@ -165,7 +165,7 @@ function parseWorkoutInput(args: WorkoutToolArgs): WorkoutInput {
   }
 }
 
-export async function saveWorkout(supabase: InputOutputSupabase, args: WorkoutToolArgs) {
+export async function saveWorkout(supabase: MacroTrackerSupabase, args: WorkoutToolArgs) {
   const input = parseWorkoutInput(args)
   const validated = validateWorkoutInput(input)
   if (!validated.ok) throw new Error(validated.error)
@@ -199,7 +199,7 @@ export async function saveWorkout(supabase: InputOutputSupabase, args: WorkoutTo
   return getWorkout(supabase, workoutId)
 }
 
-export async function deleteWorkout(supabase: InputOutputSupabase, workoutId: string) {
+export async function deleteWorkout(supabase: MacroTrackerSupabase, workoutId: string) {
   const { error } = await supabase.from('workouts').delete().eq('id', workoutId)
   if (error) throw error
   return { ok: true as const }
@@ -234,7 +234,7 @@ function parseLogWorkoutInput(args: WorkoutToolArgs): LogWorkoutInput {
   }
 }
 
-export async function logWorkoutEntry(supabase: InputOutputSupabase, args: WorkoutToolArgs) {
+export async function logWorkoutEntry(supabase: MacroTrackerSupabase, args: WorkoutToolArgs) {
   const input = parseLogWorkoutInput(args)
   const workout = await getWorkout(supabase, input.workoutId)
   const userId = await requireUserId(supabase)

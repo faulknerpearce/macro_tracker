@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from '@input_output/shared'
+import type { Database } from '@macro_tracker/shared'
 import { verifyPayload, verifyPkce } from './crypto.js'
 import { redirectUriMatches } from './redirect.js'
 import type { AuthCodePayload, OAuthEnv } from './types.js'

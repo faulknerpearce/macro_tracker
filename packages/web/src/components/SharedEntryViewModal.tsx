@@ -1,4 +1,4 @@
-import { formatLogTime } from '@input_output/shared'
+import { formatLogTime } from '@macro_tracker/shared'
 import type { SharedEntryItem } from '../lib/sharing'
 import { primaryButton } from '../lib/styles'
 import Modal from './Modal'

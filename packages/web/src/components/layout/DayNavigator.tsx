@@ -1,4 +1,4 @@
-import { formatDayLabel, formatMonthDayLabel, formatWeekdayHeadline } from '@input_output/shared'
+import { formatDayLabel, formatMonthDayLabel, formatWeekdayHeadline } from '@macro_tracker/shared'
 import type { ReactNode } from 'react'
 import GoToTodayButton from './GoToTodayButton'
 

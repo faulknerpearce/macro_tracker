@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { FoodEntry } from '@input_output/shared'
+import type { FoodEntry } from '@macro_tracker/shared'
 import { buildMetricConfigs } from '../lib/metrics'
 
 function entry(partial: Partial<FoodEntry> & Pick<FoodEntry, 'id' | 'name'>): FoodEntry {

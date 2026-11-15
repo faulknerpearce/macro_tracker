@@ -17,7 +17,7 @@ import {
   type RecipeInput,
   type RecipeSummary,
   type RecipeWithIngredients,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import type { FoodEntry } from './entries'
 import { markRecipeShareSaved } from './sharing'
 import { supabase } from './supabase'

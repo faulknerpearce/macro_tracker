@@ -4,8 +4,8 @@ import {
   ListToolsRequestSchema,
   type Tool,
 } from '@modelcontextprotocol/sdk/types.js'
-import { parseLogDate, todayISOInTimeZone } from '@input_output/shared'
-import type { InputOutputSupabase } from './supabase.js'
+import { parseLogDate, todayISOInTimeZone } from '@macro_tracker/shared'
+import type { MacroTrackerSupabase } from './supabase.js'
 import {
   addActivityForDate,
   addFoodEntryForDate,
@@ -53,9 +53,9 @@ import {
   updateWeightCheckinSettings,
 } from './contextHandlers.js'
 import { getFitnessConnectionStatus, type IntegrationEnv } from './integrations/fitnessSync.js'
-import { LLM_ESTIMATION_GUIDE } from '@input_output/shared'
+import { LLM_ESTIMATION_GUIDE } from '@macro_tracker/shared'
 
-export { createAuthenticatedSupabase, type InputOutputSupabase } from './supabase.js'
+export { createAuthenticatedSupabase, type MacroTrackerSupabase } from './supabase.js'
 export type { IntegrationEnv } from './integrations/fitnessSync.js'
 
 /** JSON Schema object inputs — strict shape Grok and other MCP clients expect. */
@@ -163,7 +163,7 @@ const activityFields = {
   estimateNotes: { type: 'string', description: 'What you assumed, e.g. "45 min yard work, moderate".' },
 }
 
-async function resolveLogDateArg(supabase: InputOutputSupabase, value: unknown): Promise<string> {
+async function resolveLogDateArg(supabase: MacroTrackerSupabase, value: unknown): Promise<string> {
   const timeZone = await fetchUserTimeZone(supabase)
   const parsed = parseLogDate(value, {
     fallback: todayISOInTimeZone(timeZone),
@@ -174,7 +174,7 @@ async function resolveLogDateArg(supabase: InputOutputSupabase, value: unknown):
 }
 
 async function resolveRequiredLogDateArg(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   value: unknown,
 ): Promise<string> {
   const timeZone = await fetchUserTimeZone(supabase)
@@ -183,20 +183,20 @@ async function resolveRequiredLogDateArg(
   return parsed.value
 }
 
-export const SERVER_NAME = 'input_output'
+export const SERVER_NAME = 'macro_tracker'
 export const SERVER_VERSION = '1.4.0'
 
 export const tools: Tool[] = [
   {
     name: 'list_food_entries',
     description:
-      'Input Output: list food log entries and meals for a day (calories, protein, carbs, fat, fiber, caffeine). Works for past days.',
+      'Macro Tracker: list food log entries and meals for a day (calories, protein, carbs, fat, fiber, caffeine). Works for past days.',
     inputSchema: objectSchema({ date: dateProperty }),
   },
   {
     name: 'add_food_entry',
     description:
-      'Input Output: add a food or meal entry to the daily nutrition log with calories and macros. Pass date to log on a past day.',
+      'Macro Tracker: add a food or meal entry to the daily nutrition log with calories and macros. Pass date to log on a past day.',
     inputSchema: objectSchema(
       {
         date: dateProperty,
@@ -209,7 +209,7 @@ export const tools: Tool[] = [
   {
     name: 'update_food_entry',
     description:
-      'Input Output: update an existing food log entry by id. Pass date to move the entry to another day.',
+      'Macro Tracker: update an existing food log entry by id. Pass date to move the entry to another day.',
     inputSchema: objectSchema(
       {
         id: { type: 'string', description: 'ID of the entry to update' },
@@ -232,7 +232,7 @@ export const tools: Tool[] = [
   },
   {
     name: 'delete_food_entry',
-    description: 'Input Output: delete a food log entry by id.',
+    description: 'Macro Tracker: delete a food log entry by id.',
     inputSchema: objectSchema(
       { id: { type: 'string', description: 'ID of the entry to delete' } },
       ['id'],
@@ -241,19 +241,19 @@ export const tools: Tool[] = [
   {
     name: 'get_daily_totals',
     description:
-      'Input Output: get daily nutrition totals (calories, protein, carbs, fat, fiber, caffeine) and remaining macro goals. Works for past days.',
+      'Macro Tracker: get daily nutrition totals (calories, protein, carbs, fat, fiber, caffeine) and remaining macro goals. Works for past days.',
     inputSchema: objectSchema({ date: dateProperty }),
   },
   {
     name: 'list_activities',
     description:
-      'Input Output: list activity outputs (workouts) for a day — type, duration, distance, heart rate, calories burned. Works for past days.',
+      'Macro Tracker: list activity outputs (workouts) for a day — type, duration, distance, heart rate, calories burned. Works for past days.',
     inputSchema: objectSchema({ date: dateProperty }),
   },
   {
     name: 'add_activity',
     description:
-      'Input Output: log a manual activity output with type, duration, distance, heart rate, and calories burned. Pass date to log on a past day.',
+      'Macro Tracker: log a manual activity output with type, duration, distance, heart rate, and calories burned. Pass date to log on a past day.',
     inputSchema: objectSchema(
       {
         date: dateProperty,
@@ -266,7 +266,7 @@ export const tools: Tool[] = [
   {
     name: 'update_activity',
     description:
-      'Input Output: update an existing activity output by id. Pass date to move the activity to another day.',
+      'Macro Tracker: update an existing activity output by id. Pass date to move the activity to another day.',
     inputSchema: objectSchema(
       {
         id: { type: 'string', description: 'ID of the activity to update' },
@@ -285,7 +285,7 @@ export const tools: Tool[] = [
   },
   {
     name: 'delete_activity',
-    description: 'Input Output: delete an activity output by id.',
+    description: 'Macro Tracker: delete an activity output by id.',
     inputSchema: objectSchema(
       { id: { type: 'string', description: 'ID of the activity to delete' } },
       ['id'],
@@ -294,13 +294,13 @@ export const tools: Tool[] = [
   {
     name: 'get_activity_totals',
     description:
-      'Input Output: get daily activity totals (calories burned, total duration, total distance). Works for past days.',
+      'Macro Tracker: get daily activity totals (calories burned, total duration, total distance). Works for past days.',
     inputSchema: objectSchema({ date: dateProperty }),
   },
   {
     name: 'manage_day_log',
     description:
-      'Input Output: add, list, or edit food and activity logs for any calendar day, including past days. Use action=list to read a day; add_food/add_activity to create; update_* to edit by id; delete_* to remove.',
+      'Macro Tracker: add, list, or edit food and activity logs for any calendar day, including past days. Use action=list to read a day; add_food/add_activity to create; update_* to edit by id; delete_* to remove.',
     inputSchema: objectSchema(
       {
         date: {
@@ -330,12 +330,12 @@ export const tools: Tool[] = [
   {
     name: 'list_recipes',
     description:
-      'Input Output: list saved meal recipes with per-serving macro totals and ingredient counts.',
+      'Macro Tracker: list saved meal recipes with per-serving macro totals and ingredient counts.',
     inputSchema: objectSchema({}),
   },
   {
     name: 'get_recipe',
-    description: 'Input Output: get a saved recipe with all ingredient lines and macro totals.',
+    description: 'Macro Tracker: get a saved recipe with all ingredient lines and macro totals.',
     inputSchema: objectSchema(
       { id: { type: 'string', description: 'Recipe id' } },
       ['id'],
@@ -344,7 +344,7 @@ export const tools: Tool[] = [
   {
     name: 'save_recipe',
     description:
-      'Input Output: create or update a saved recipe and its ingredient lines. Pass id to update.',
+      'Macro Tracker: create or update a saved recipe and its ingredient lines. Pass id to update.',
     inputSchema: objectSchema({
       id: { type: 'string', description: 'Recipe id when updating' },
       name: { type: 'string', description: 'Recipe name' },
@@ -390,18 +390,18 @@ export const tools: Tool[] = [
   },
   {
     name: 'delete_recipe',
-    description: 'Input Output: delete a saved recipe by id.',
+    description: 'Macro Tracker: delete a saved recipe by id.',
     inputSchema: objectSchema({ id: { type: 'string', description: 'Recipe id' } }, ['id']),
   },
   {
     name: 'list_ingredients',
     description:
-      'Input Output: list saved ingredient catalog entries (macros defined per 100g).',
+      'Macro Tracker: list saved ingredient catalog entries (macros defined per 100g).',
     inputSchema: objectSchema({}),
   },
   {
     name: 'get_ingredient',
-    description: 'Input Output: get a saved catalog ingredient by id.',
+    description: 'Macro Tracker: get a saved catalog ingredient by id.',
     inputSchema: objectSchema(
       { id: { type: 'string', description: 'Ingredient id' } },
       ['id'],
@@ -410,7 +410,7 @@ export const tools: Tool[] = [
   {
     name: 'save_ingredient',
     description:
-      'Input Output: create or update a catalog ingredient with per-100g macros. Pass id to update. Macro values may be provided inline (calories, protein, ...) or nested under per100g.',
+      'Macro Tracker: create or update a catalog ingredient with per-100g macros. Pass id to update. Macro values may be provided inline (calories, protein, ...) or nested under per100g.',
     inputSchema: objectSchema({
       id: { type: 'string', description: 'Ingredient id when updating' },
       name: { type: 'string', description: 'Ingredient name' },
@@ -440,13 +440,13 @@ export const tools: Tool[] = [
   },
   {
     name: 'delete_ingredient',
-    description: 'Input Output: delete a catalog ingredient by id.',
+    description: 'Macro Tracker: delete a catalog ingredient by id.',
     inputSchema: objectSchema({ id: { type: 'string', description: 'Ingredient id' } }, ['id']),
   },
   {
     name: 'log_recipe',
     description:
-      'Input Output: log one food entry from a saved recipe. Scale by servings or by grams eaten (requires recipe serving weight). Creates a single aggregated food log row.',
+      'Macro Tracker: log one food entry from a saved recipe. Scale by servings or by grams eaten (requires recipe serving weight). Creates a single aggregated food log row.',
     inputSchema: objectSchema(
       {
         recipeId: { type: 'string', description: 'Recipe id to log' },
@@ -471,18 +471,18 @@ export const tools: Tool[] = [
   {
     name: 'list_workouts',
     description:
-      'Input Output: list saved workout templates with exercise counts and total target sets.',
+      'Macro Tracker: list saved workout templates with exercise counts and total target sets.',
     inputSchema: objectSchema({}),
   },
   {
     name: 'get_workout',
-    description: 'Input Output: get a saved workout with all exercise lines.',
+    description: 'Macro Tracker: get a saved workout with all exercise lines.',
     inputSchema: objectSchema({ id: { type: 'string', description: 'Workout id' } }, ['id']),
   },
   {
     name: 'save_workout',
     description:
-      'Input Output: create or update a saved workout and its exercise lines. Pass id to update.',
+      'Macro Tracker: create or update a saved workout and its exercise lines. Pass id to update.',
     inputSchema: objectSchema(
       {
         id: { type: 'string', description: 'Workout id when updating' },
@@ -517,13 +517,13 @@ export const tools: Tool[] = [
   },
   {
     name: 'delete_workout',
-    description: 'Input Output: delete a saved workout by id.',
+    description: 'Macro Tracker: delete a saved workout by id.',
     inputSchema: objectSchema({ id: { type: 'string', description: 'Workout id' } }, ['id']),
   },
   {
     name: 'log_workout',
     description:
-      'Input Output: log one activity from a saved workout. setsLogged is how many full rounds of the workout were completed (default 1).',
+      'Macro Tracker: log one activity from a saved workout. setsLogged is how many full rounds of the workout were completed (default 1).',
     inputSchema: objectSchema(
       {
         workoutId: { type: 'string', description: 'Workout id to log' },
@@ -541,13 +541,13 @@ export const tools: Tool[] = [
   {
     name: 'get_user_context',
     description:
-      'Input Output: call first. Returns the user\'s age, sex, height, latest weight, BMR, nutrition goals, today\'s date and time zone, whether a weight check-in is due, fitness tracker status, and guidance for estimating food and exercise.',
+      'Macro Tracker: call first. Returns the user\'s age, sex, height, latest weight, BMR, nutrition goals, today\'s date and time zone, whether a weight check-in is due, fitness tracker status, and guidance for estimating food and exercise.',
     inputSchema: objectSchema({}),
   },
   {
     name: 'search_food_history',
     description:
-      'Input Output: find foods the user has logged before by name (e.g. "flat white"), with how often, their latest macros and typical calories. Reuse these numbers for "my usual" requests.',
+      'Macro Tracker: find foods the user has logged before by name (e.g. "flat white"), with how often, their latest macros and typical calories. Reuse these numbers for "my usual" requests.',
     inputSchema: objectSchema(
       {
         query: { type: 'string', description: 'Part of the food name' },
@@ -559,7 +559,7 @@ export const tools: Tool[] = [
   {
     name: 'estimate_activity_calories',
     description:
-      'Input Output: estimate calories burned (net of resting) for an activity from duration, intensity, optional distance, and the user\'s weight. Use before add_activity when the user doesn\'t know calories.',
+      'Macro Tracker: estimate calories burned (net of resting) for an activity from duration, intensity, optional distance, and the user\'s weight. Use before add_activity when the user doesn\'t know calories.',
     inputSchema: objectSchema(
       {
         activityType: { type: 'string', description: 'Run, Ride, Swim, Walk, Hike, Workout, or Other' },
@@ -574,7 +574,7 @@ export const tools: Tool[] = [
   {
     name: 'log_weight',
     description:
-      'Input Output: record a body weight measurement (kg or lb). Updates the profile weight used for BMR and estimates.',
+      'Macro Tracker: record a body weight measurement (kg or lb). Updates the profile weight used for BMR and estimates.',
     inputSchema: objectSchema(
       {
         weight: { type: 'number', description: 'Weight value' },
@@ -588,18 +588,18 @@ export const tools: Tool[] = [
   },
   {
     name: 'get_weight_history',
-    description: 'Input Output: weight measurements and the smoothed trend over the last N days.',
+    description: 'Macro Tracker: weight measurements and the smoothed trend over the last N days.',
     inputSchema: objectSchema({ days: { type: 'number', description: 'Days to include (default 90)' } }),
   },
   {
     name: 'snooze_weight_checkin',
-    description: 'Input Output: postpone the weight check-in reminder (1–7 days, default 2) when the user declines.',
+    description: 'Macro Tracker: postpone the weight check-in reminder (1–7 days, default 2) when the user declines.',
     inputSchema: objectSchema({ days: { type: 'number', description: 'Days to snooze' } }),
   },
   {
     name: 'update_weight_checkin_settings',
     description:
-      'Input Output: turn weight tracking reminders on or off and set how often to ask (3–30 days; weekly recommended).',
+      'Macro Tracker: turn weight tracking reminders on or off and set how often to ask (3–30 days; weekly recommended).',
     inputSchema: objectSchema({
       enabled: { type: 'boolean' },
       intervalDays: { type: 'number', description: 'Days between check-ins' },
@@ -607,13 +607,13 @@ export const tools: Tool[] = [
   },
   {
     name: 'get_fitness_tracker_status',
-    description: 'Input Output: whether a fitness tracker (Google Health) is connected, its sync settings and last sync.',
+    description: 'Macro Tracker: whether a fitness tracker (Google Health) is connected, its sync settings and last sync.',
     inputSchema: objectSchema({}),
   },
   {
     name: 'sync_fitness_tracker',
     description:
-      'Input Output: pull workouts, daily calories, steps and weight from the connected fitness tracker (Google Health). Defaults to everything since the last sync. Call before adding a workout by hand to avoid duplicates.',
+      'Macro Tracker: pull workouts, daily calories, steps and weight from the connected fitness tracker (Google Health). Defaults to everything since the last sync. Call before adding a workout by hand to avoid duplicates.',
     inputSchema: objectSchema({
       startDate: { type: 'string', description: 'Optional YYYY-MM-DD start (max 30 days back)' },
       endDate: { type: 'string', description: 'Optional YYYY-MM-DD end (default today)' },
@@ -626,7 +626,7 @@ export interface CreateServerOptions {
   integrationEnv?: IntegrationEnv
 }
 
-export function createServer(supabase: InputOutputSupabase, options: CreateServerOptions = {}): Server {
+export function createServer(supabase: MacroTrackerSupabase, options: CreateServerOptions = {}): Server {
   const foodTools = tools
     .filter(
       (t) =>
@@ -652,7 +652,7 @@ export function createServer(supabase: InputOutputSupabase, options: CreateServe
   const ingredientTools = tools
     .filter((t) => t.name.includes('ingredient') && (t.name.endsWith('_ingredient') || t.name === 'list_ingredients'))
     .map((t) => t.name)
-  const instructions = `input output tools for food inputs, saved recipes, a reusable ingredient catalog, saved workouts, and activity outputs. Food: ${foodTools.join(', ')}. Recipes: ${recipeTools.join(', ')}. Ingredients: ${ingredientTools.join(', ')}. Workouts: ${workoutTools.join(', ')}. Activities: ${activityTools.join(', ')}. Use log_recipe or add_food_entry to log meals; log_workout or add_activity for outputs. Recipes can reference catalog ingredients by ingredientId with gram-based macros. Weight: log_weight, get_weight_history. Fitness tracker: sync_fitness_tracker. All data is scoped to the signed-in user.\n\nHow to estimate:\n${LLM_ESTIMATION_GUIDE}`
+  const instructions = `macro tracker tools for food inputs, saved recipes, a reusable ingredient catalog, saved workouts, and activity outputs. Food: ${foodTools.join(', ')}. Recipes: ${recipeTools.join(', ')}. Ingredients: ${ingredientTools.join(', ')}. Workouts: ${workoutTools.join(', ')}. Activities: ${activityTools.join(', ')}. Use log_recipe or add_food_entry to log meals; log_workout or add_activity for outputs. Recipes can reference catalog ingredients by ingredientId with gram-based macros. Weight: log_weight, get_weight_history. Fitness tracker: sync_fitness_tracker. All data is scoped to the signed-in user.\n\nHow to estimate:\n${LLM_ESTIMATION_GUIDE}`
 
   const server = new Server(
     { name: SERVER_NAME, version: SERVER_VERSION },

@@ -7,7 +7,7 @@ import {
   type NutritionGoals,
   type ProfileUpdate,
   type UserProfile,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { fetchUserProfile, saveProfileUpdate } from '../lib/profile'
 import { useAuth } from './useAuth'

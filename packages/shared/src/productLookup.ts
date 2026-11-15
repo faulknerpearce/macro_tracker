@@ -47,7 +47,7 @@ export async function lookupOpenFoodFactsProduct(
   try {
     const response = await fetchFn(buildOpenFoodFactsUrl(barcode), {
       headers: {
-        'User-Agent': 'InputOutput/1.0 (https://github.com/faulknerpearce/input_output)',
+        'User-Agent': 'MacroTracker/1.0 (https://github.com/faulknerpearce/macro_tracker)',
         Accept: 'application/json',
       },
     })

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { DEFAULT_NUTRITION_GOALS } from '@input_output/shared'
+import { DEFAULT_NUTRITION_GOALS } from '@macro_tracker/shared'
 import { ProfileContext } from './profile-context'
 
 export function useProfile() {

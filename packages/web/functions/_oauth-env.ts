@@ -1,4 +1,4 @@
-import type { OAuthEnv } from '@input_output/mcp-server/oauth'
+import type { OAuthEnv } from '@macro_tracker/mcp-server/oauth'
 
 export interface PagesOAuthEnv {
   SUPABASE_URL: string

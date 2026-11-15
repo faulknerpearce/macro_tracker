@@ -3,7 +3,7 @@ import {
   formatLogTime,
   mapEntriesToMealMarkers,
   niceCalorieAxisMax,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { useMemo, useState } from 'react'
 import type { FoodEntry } from '../../lib/entries'
 

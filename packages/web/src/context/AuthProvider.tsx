@@ -19,7 +19,7 @@ function clearSupabaseAuthStorage() {
   }
 }
 
-const PASSWORD_RECOVERY_KEY = 'input-output-password-recovery'
+const PASSWORD_RECOVERY_KEY = 'macro-tracker-password-recovery'
 
 function readPasswordRecovery(): boolean {
   try {
@@ -148,7 +148,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Exact Site URL. A trailing slash is a different allow-list entry, and Supabase
     // then falls back to the project Site URL instead of the page that sent the request.
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: 'https://input-output.pages.dev',
+      redirectTo: 'https://macro-tracker.pages.dev',
     })
     return { error: error?.message ?? null }
   }, [])

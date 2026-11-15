@@ -1,5 +1,5 @@
 /// <reference types="@cloudflare/workers-types" />
 
-import { handlePublicToolSchema } from '@input_output/mcp-server/schema'
+import { handlePublicToolSchema } from '@macro_tracker/mcp-server/schema'
 
 export const onRequest = async () => handlePublicToolSchema()

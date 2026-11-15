@@ -1,4 +1,4 @@
-import { formatDistance, formatDuration, formatLogTime } from '@input_output/shared'
+import { formatDistance, formatDuration, formatLogTime } from '@macro_tracker/shared'
 import type { SharedActivityItem } from '../lib/sharing'
 import { primaryButton } from '../lib/styles'
 import Modal from './Modal'

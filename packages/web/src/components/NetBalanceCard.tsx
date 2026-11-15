@@ -1,4 +1,4 @@
-import type { NetBalance } from '@input_output/shared'
+import type { NetBalance } from '@macro_tracker/shared'
 import { cardSurface, iconTileSm, subtleSurface } from '../lib/styles'
 
 interface NetBalanceCardProps {

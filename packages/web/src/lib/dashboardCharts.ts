@@ -1,4 +1,4 @@
-import { type NetBalance, type Totals } from '@input_output/shared'
+import { type NetBalance, type Totals } from '@macro_tracker/shared'
 
 export interface RingProgress {
   pct: number

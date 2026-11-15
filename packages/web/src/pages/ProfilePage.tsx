@@ -7,7 +7,7 @@ import {
   type ProfileGender,
   type ProfileUpdate,
   type UserProfile,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import GoalsFormFields from '../components/GoalsFormFields'
 import DevicesSection from '../components/profile/DevicesSection'
 import WeightTrackingSection from '../components/profile/WeightTrackingSection'

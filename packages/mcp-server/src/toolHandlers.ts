@@ -20,13 +20,13 @@ import {
   type FoodUpdate,
   estimateActivityCalories,
   parseIntensity,
-} from '@input_output/shared'
-import type { InputOutputSupabase } from './supabase.js'
+} from '@macro_tracker/shared'
+import type { MacroTrackerSupabase } from './supabase.js'
 import { activityProvenance, foodProvenance, isMissingProvenanceColumn } from './provenance.js'
 
 export type ToolArgs = Record<string, unknown>
 
-export async function requireUserId(supabase: InputOutputSupabase): Promise<string> {
+export async function requireUserId(supabase: MacroTrackerSupabase): Promise<string> {
   const {
     data: { user },
     error,
@@ -36,7 +36,7 @@ export async function requireUserId(supabase: InputOutputSupabase): Promise<stri
   return user.id
 }
 
-async function fetchUserGoals(supabase: InputOutputSupabase) {
+async function fetchUserGoals(supabase: MacroTrackerSupabase) {
   const userId = await requireUserId(supabase)
   const { data, error } = await supabase
     .from('profiles')
@@ -47,7 +47,7 @@ async function fetchUserGoals(supabase: InputOutputSupabase) {
   return parseNutritionGoals(data?.nutrition_goals ?? DEFAULT_NUTRITION_GOALS)
 }
 
-export async function fetchUserTimeZone(supabase: InputOutputSupabase): Promise<string> {
+export async function fetchUserTimeZone(supabase: MacroTrackerSupabase): Promise<string> {
   const userId = await requireUserId(supabase)
   const { data, error } = await supabase
     .from('profiles')
@@ -62,7 +62,7 @@ export async function fetchUserTimeZone(supabase: InputOutputSupabase): Promise<
 export const FOOD_ENTRY_DELETE_FORBIDDEN =
   'Entry not found or you do not have permission to delete it'
 
-export async function listFoodEntriesForDate(supabase: InputOutputSupabase, date: string) {
+export async function listFoodEntriesForDate(supabase: MacroTrackerSupabase, date: string) {
   const userId = await requireUserId(supabase)
   const { data, error } = await supabase
     .from('food_entries')
@@ -75,7 +75,7 @@ export async function listFoodEntriesForDate(supabase: InputOutputSupabase, date
 }
 
 export async function addFoodEntryForDate(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   date: string,
   args: ToolArgs,
 ) {
@@ -106,7 +106,7 @@ export async function addFoodEntryForDate(
   return mapRow(data!)
 }
 
-export async function updateFoodEntry(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function updateFoodEntry(supabase: MacroTrackerSupabase, args: ToolArgs) {
   if (typeof args.id !== 'string' || args.id === '') throw new Error('id is required')
 
   const partial: Record<string, unknown> = {
@@ -147,7 +147,7 @@ export async function updateFoodEntry(supabase: InputOutputSupabase, args: ToolA
   return mapRow(data)
 }
 
-export async function deleteFoodEntry(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function deleteFoodEntry(supabase: MacroTrackerSupabase, args: ToolArgs) {
   if (typeof args.id !== 'string' || args.id === '') throw new Error('id is required')
   const { data, error } = await supabase
     .from('food_entries')
@@ -159,7 +159,7 @@ export async function deleteFoodEntry(supabase: InputOutputSupabase, args: ToolA
   return { ok: true as const }
 }
 
-export async function getDailyTotalsForDate(supabase: InputOutputSupabase, date: string) {
+export async function getDailyTotalsForDate(supabase: MacroTrackerSupabase, date: string) {
   const entries = await listFoodEntriesForDate(supabase, date)
   const totals = sumTotals(entries)
   const goals = await fetchUserGoals(supabase)
@@ -167,7 +167,7 @@ export async function getDailyTotalsForDate(supabase: InputOutputSupabase, date:
 }
 
 async function attachActivityExercises(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   activities: ReturnType<typeof mapActivityRow>[],
 ) {
   if (activities.length === 0) return activities
@@ -198,7 +198,7 @@ async function attachActivityExercises(
   }))
 }
 
-export async function listActivitiesForDate(supabase: InputOutputSupabase, date: string) {
+export async function listActivitiesForDate(supabase: MacroTrackerSupabase, date: string) {
   const { data, error } = await supabase
     .from('activities')
     .select('*')
@@ -209,7 +209,7 @@ export async function listActivitiesForDate(supabase: InputOutputSupabase, date:
 }
 
 export async function addActivityForDate(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   date: string,
   args: ToolArgs,
 ) {
@@ -258,7 +258,7 @@ export async function addActivityForDate(
 
 /** Latest weight from history if available, else the profile's weight. */
 export async function fetchLatestWeightKg(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   userId: string,
 ): Promise<number | null> {
   const history = await supabase
@@ -276,7 +276,7 @@ export async function fetchLatestWeightKg(
   return Number.isFinite(w) && w > 0 ? w : null
 }
 
-export async function updateActivity(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function updateActivity(supabase: MacroTrackerSupabase, args: ToolArgs) {
   if (typeof args.id !== 'string' || args.id === '') throw new Error('id is required')
 
   const partial: Record<string, unknown> = {}
@@ -327,14 +327,14 @@ export async function updateActivity(supabase: InputOutputSupabase, args: ToolAr
   return mapActivityRow(data)
 }
 
-export async function deleteActivity(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function deleteActivity(supabase: MacroTrackerSupabase, args: ToolArgs) {
   if (typeof args.id !== 'string' || args.id === '') throw new Error('id is required')
   const { error } = await supabase.from('activities').delete().eq('id', args.id)
   if (error) throw error
   return { ok: true as const }
 }
 
-export async function getActivityTotalsForDate(supabase: InputOutputSupabase, date: string) {
+export async function getActivityTotalsForDate(supabase: MacroTrackerSupabase, date: string) {
   const entries = await listActivitiesForDate(supabase, date)
   return { totals: sumActivityTotals(entries), date }
 }
@@ -363,7 +363,7 @@ export function isManageDayLogAction(value: unknown): value is ManageDayLogActio
 }
 
 export async function manageDayLog(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   date: string,
   action: ManageDayLogAction,
   args: ToolArgs,

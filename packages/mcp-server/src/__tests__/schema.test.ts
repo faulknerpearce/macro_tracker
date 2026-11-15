@@ -6,12 +6,12 @@ describe('publicToolManifest', () => {
   it('exposes server metadata and valid tools for connector probes', () => {
     const manifest = publicToolManifest()
 
-    expect(manifest.serverInfo.name).toBe('input_output')
+    expect(manifest.serverInfo.name).toBe('macro_tracker')
     expect(manifest.tools).toHaveLength(34)
 
     for (const tool of manifest.tools) {
       expect(ToolSchema.safeParse(tool).success).toBe(true)
-      expect(tool.description?.toLowerCase()).toContain('input output')
+      expect(tool.description?.toLowerCase()).toContain('macro tracker')
     }
   })
 })

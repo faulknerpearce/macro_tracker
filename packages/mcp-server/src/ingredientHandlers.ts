@@ -5,8 +5,8 @@ import {
   validateIngredientInput,
   type Ingredient,
   type IngredientInput,
-} from '@input_output/shared'
-import type { InputOutputSupabase } from './supabase.js'
+} from '@macro_tracker/shared'
+import type { MacroTrackerSupabase } from './supabase.js'
 import { requireUserId } from './toolHandlers.js'
 
 export type IngredientToolArgs = Record<string, unknown>
@@ -51,7 +51,7 @@ function parseIngredientInput(args: IngredientToolArgs): IngredientInput {
   }
 }
 
-export async function listIngredients(supabase: InputOutputSupabase): Promise<Ingredient[]> {
+export async function listIngredients(supabase: MacroTrackerSupabase): Promise<Ingredient[]> {
   const { data, error } = await supabase
     .from('ingredients')
     .select('*')
@@ -61,7 +61,7 @@ export async function listIngredients(supabase: InputOutputSupabase): Promise<In
 }
 
 export async function getIngredient(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   ingredientId: string,
 ): Promise<Ingredient> {
   const { data, error } = await supabase
@@ -74,7 +74,7 @@ export async function getIngredient(
 }
 
 export async function saveIngredient(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   args: IngredientToolArgs,
 ): Promise<Ingredient> {
   const input = parseIngredientInput(args)
@@ -102,7 +102,7 @@ export async function saveIngredient(
 }
 
 export async function deleteIngredient(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   ingredientId: string,
 ) {
   const { error } = await supabase.from('ingredients').delete().eq('id', ingredientId)

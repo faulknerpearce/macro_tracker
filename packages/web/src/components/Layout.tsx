@@ -112,7 +112,7 @@ export default function Layout({ children, activeRoute }: LayoutProps) {
                       : zoneTokens[atmosphereZone].accent,
                 }}
               />
-              <span className="app-nav-title">Input Output</span>
+              <span className="app-nav-title">Macro Tracker</span>
             </a>
             <div
               ref={menuRef}

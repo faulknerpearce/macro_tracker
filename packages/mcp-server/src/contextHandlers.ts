@@ -10,14 +10,14 @@ import {
   summarizeWeightTrend,
   todayISOInTimeZone,
   type WeightPoint,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import {
   getFitnessConnectionStatus,
   integrationConfigured,
   syncGoogleHealth,
   type IntegrationEnv,
 } from './integrations/fitnessSync.js'
-import type { InputOutputSupabase } from './supabase.js'
+import type { MacroTrackerSupabase } from './supabase.js'
 import { fetchUserTimeZone, requireUserId, type ToolArgs } from './toolHandlers.js'
 
 const LB_PER_KG = 2.20462
@@ -37,7 +37,7 @@ function num(v: unknown): number | null {
   return null
 }
 
-async function loadProfileRow(supabase: InputOutputSupabase, userId: string): Promise<Record<string, unknown>> {
+async function loadProfileRow(supabase: MacroTrackerSupabase, userId: string): Promise<Record<string, unknown>> {
   const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle()
   if (error) throw new Error(error.message)
   if (!data) throw new Error('Profile not found')
@@ -45,7 +45,7 @@ async function loadProfileRow(supabase: InputOutputSupabase, userId: string): Pr
 }
 
 async function loadWeights(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   userId: string,
   sinceIso: string,
 ): Promise<{ points: WeightPoint[]; available: boolean }> {
@@ -68,7 +68,7 @@ async function loadWeights(
   }
 }
 
-async function lastMeasuredOn(supabase: InputOutputSupabase, userId: string): Promise<string | null> {
+async function lastMeasuredOn(supabase: MacroTrackerSupabase, userId: string): Promise<string | null> {
   const { data, error } = await supabase
     .from('body_measurements')
     .select('measured_on')
@@ -82,7 +82,7 @@ async function lastMeasuredOn(supabase: InputOutputSupabase, userId: string): Pr
 }
 
 /** Everything an LLM needs to estimate food and activity for this user. */
-export async function getUserContext(supabase: InputOutputSupabase, integrationEnv?: IntegrationEnv) {
+export async function getUserContext(supabase: MacroTrackerSupabase, integrationEnv?: IntegrationEnv) {
   const userId = await requireUserId(supabase)
   const row = await loadProfileRow(supabase, userId)
   const profile = mapProfileRow(row as Parameters<typeof mapProfileRow>[0])
@@ -150,7 +150,7 @@ export async function getUserContext(supabase: InputOutputSupabase, integrationE
 }
 
 /** Calorie estimate for an activity using the user's latest weight. */
-export async function estimateActivityForUser(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function estimateActivityForUser(supabase: MacroTrackerSupabase, args: ToolArgs) {
   const userId = await requireUserId(supabase)
   const durationMinutes = num(args.durationMinutes)
   if (durationMinutes === null || durationMinutes <= 0) throw new Error('durationMinutes is required')
@@ -174,7 +174,7 @@ export async function estimateActivityForUser(supabase: InputOutputSupabase, arg
   }
 }
 
-export async function logWeight(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function logWeight(supabase: MacroTrackerSupabase, args: ToolArgs) {
   const userId = await requireUserId(supabase)
   const value = num(args.weight)
   if (value === null || value <= 0) throw new Error('weight is required')
@@ -217,7 +217,7 @@ export async function logWeight(supabase: InputOutputSupabase, args: ToolArgs) {
   }
 }
 
-export async function getWeightHistory(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function getWeightHistory(supabase: MacroTrackerSupabase, args: ToolArgs) {
   const userId = await requireUserId(supabase)
   const days = Math.min(365, Math.max(7, Math.round(num(args.days) ?? 90)))
   const today = todayISOInTimeZone(await fetchUserTimeZone(supabase))
@@ -229,7 +229,7 @@ export async function getWeightHistory(supabase: InputOutputSupabase, args: Tool
   }
 }
 
-export async function snoozeWeightCheckin(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function snoozeWeightCheckin(supabase: MacroTrackerSupabase, args: ToolArgs) {
   const userId = await requireUserId(supabase)
   const days = Math.min(7, Math.max(1, Math.round(num(args.days) ?? 2)))
   const today = todayISOInTimeZone(await fetchUserTimeZone(supabase))
@@ -239,7 +239,7 @@ export async function snoozeWeightCheckin(supabase: InputOutputSupabase, args: T
   return { snoozedUntil: until }
 }
 
-export async function updateWeightCheckinSettings(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function updateWeightCheckinSettings(supabase: MacroTrackerSupabase, args: ToolArgs) {
   const userId = await requireUserId(supabase)
   const patch: { weight_tracking?: boolean; weight_checkin_days?: number } = {}
   if (typeof args.enabled === 'boolean') patch.weight_tracking = args.enabled
@@ -261,7 +261,7 @@ export async function updateWeightCheckinSettings(supabase: InputOutputSupabase,
  * Past entries matching a name, grouped, so the LLM can reuse the user's own numbers
  * ("my usual flat white") instead of estimating from scratch.
  */
-export async function searchFoodHistory(supabase: InputOutputSupabase, args: ToolArgs) {
+export async function searchFoodHistory(supabase: MacroTrackerSupabase, args: ToolArgs) {
   const userId = await requireUserId(supabase)
   const query = typeof args.query === 'string' ? args.query.trim() : ''
   if (query.length < 2) throw new Error('query must be at least 2 characters')
@@ -312,13 +312,13 @@ export async function searchFoodHistory(supabase: InputOutputSupabase, args: Too
 }
 
 export async function syncFitnessTracker(
-  supabase: InputOutputSupabase,
+  supabase: MacroTrackerSupabase,
   integrationEnv: IntegrationEnv | undefined,
   args: ToolArgs,
 ) {
   if (!integrationConfigured(integrationEnv)) {
     throw new Error(
-      'Tracker sync runs on the hosted Input Output server. Use the remote MCP endpoint, or tap Sync in Input Output > Profile > Fitness tracker.',
+      'Tracker sync runs on the hosted Macro Tracker server. Use the remote MCP endpoint, or tap Sync in Macro Tracker > Profile > Fitness tracker.',
     )
   }
   return syncGoogleHealth(supabase, integrationEnv, {

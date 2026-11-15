@@ -10,7 +10,7 @@ import {
   type NewRecipeIngredient,
   type RecipeInput,
   type RecipeWithIngredients,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import CatalogListSection from './catalog/CatalogListSection'
 import CatalogModalHeader from './catalog/CatalogModalHeader'
 import IconPicker from './catalog/IconPicker'

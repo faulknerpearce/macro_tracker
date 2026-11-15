@@ -1,4 +1,4 @@
-import type { IconOption } from '@input_output/shared'
+import type { IconOption } from '@macro_tracker/shared'
 import { labelBase } from '../../lib/styles'
 
 interface IconPickerProps {

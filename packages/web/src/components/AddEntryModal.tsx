@@ -13,7 +13,7 @@ import {
   type IconOption,
   type PortionUnit,
   type RecipeSummary,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { focusIfDesktop } from '../lib/device'
 import type { MappedBarcodeProduct } from '../lib/openFoodFacts'
 import { sortRecipesByName } from '../lib/recipeFilters'

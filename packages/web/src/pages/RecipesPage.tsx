@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import type { RecipeSummary, RecipeWithIngredients } from '@input_output/shared'
+import type { RecipeSummary, RecipeWithIngredients } from '@macro_tracker/shared'
 import CatalogRow from '../components/layout/CatalogRow'
 import { PageLoading } from '../components/layout/PageState'
 import ZoneButton from '../components/layout/ZoneButton'

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { InputOutputSupabase } from '../supabase.js'
+import type { MacroTrackerSupabase } from '../supabase.js'
 import {
   deleteFoodEntry,
   FOOD_ENTRY_DELETE_FORBIDDEN,
@@ -47,7 +47,7 @@ function createMockSupabase(options: {
         })),
       })),
     })),
-  } as unknown as InputOutputSupabase
+  } as unknown as MacroTrackerSupabase
 
   return { supabase, eqCalls }
 }

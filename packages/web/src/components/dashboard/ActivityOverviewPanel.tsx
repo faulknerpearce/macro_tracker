@@ -1,4 +1,4 @@
-import type { Activity } from '@input_output/shared'
+import type { Activity } from '@macro_tracker/shared'
 import { buildActivityMetricConfigs } from '../../lib/activityMetrics'
 import { cardSurface } from '../../lib/styles'
 import { routeHref } from '../../lib/routing'

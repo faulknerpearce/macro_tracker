@@ -2,7 +2,7 @@ import {
   mapOpenFoodFactsToEntry,
   type MappedBarcodeProduct,
   type OpenFoodFactsProduct,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 
 export type { MappedBarcodeProduct }
 

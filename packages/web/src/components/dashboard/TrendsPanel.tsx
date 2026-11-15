@@ -3,7 +3,7 @@ import {
   summarizeDailyEnergyPeriod,
   type DailyEnergySnapshot,
   type TrendsRangePreset,
-} from '@input_output/shared'
+} from '@macro_tracker/shared'
 import { useState } from 'react'
 import {
   neutrals,

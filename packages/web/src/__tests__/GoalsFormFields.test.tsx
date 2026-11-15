@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { describe, expect, it } from 'vitest'
-import { DEFAULT_NUTRITION_GOALS, type NutritionGoals } from '@input_output/shared'
+import { DEFAULT_NUTRITION_GOALS, type NutritionGoals } from '@macro_tracker/shared'
 import GoalsFormFields from '../components/GoalsFormFields'
 import { renderWithProviders } from './testUtils'
 

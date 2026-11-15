@@ -1,4 +1,4 @@
-import type { WorkoutSummary } from '@input_output/shared'
+import type { WorkoutSummary } from '@macro_tracker/shared'
 
 export type WorkoutSortOption =
   | 'name-asc'

@@ -1,4 +1,4 @@
-import { formatPortionLabel } from '@input_output/shared'
+import { formatPortionLabel } from '@macro_tracker/shared'
 import { useState } from 'react'
 import type { MappedBarcodeProduct } from '../lib/openFoodFacts'
 import type { FoodEntry, FoodEntryWrite } from '../lib/entries'
@@ -29,7 +29,7 @@ interface FoodLogSectionProps {
   onLogRecipe?: (
     recipeId: string,
     options: {
-      portionUnit: import('@input_output/shared').PortionUnit
+      portionUnit: import('@macro_tracker/shared').PortionUnit
       portionQuantity: number
       servingWeightGrams?: number
       loggedAt?: string
