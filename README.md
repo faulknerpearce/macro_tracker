@@ -174,7 +174,7 @@ and Health Connect is on-device only). Requires migration
 
 1. In Google Cloud Console, create an OAuth client (Web application) and enable the
    Google Health API. Authorized redirect URI:
-   `https://<your-domain>/api/integrations/google-health/callback`.
+   `https://macro-tracker-app.pages.dev/api/integrations/google-health/callback`.
 2. Request the read-only scopes `googlehealth.activity_and_fitness.readonly` and
    `googlehealth.health_metrics_and_measurements.readonly`. They are **Restricted**:
    until Google's privacy and security review passes, only test users added to the
