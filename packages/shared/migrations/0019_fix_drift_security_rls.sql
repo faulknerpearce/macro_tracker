@@ -1,11 +1,11 @@
--- 0019_fix_drift_security_rls.sql  (PROPOSED — not applied)
+-- 0019_fix_drift_security_rls.sql  (applied to production 2026-11-15)
 -- Generated from the live project's pg_policies on 2026-11-15.
 -- 1) applies 0017 (gender, bmr_override) which production is missing
 -- 2) RLS: evaluate auth.uid() once per query, scope policies to `authenticated`,
 --    merge own + shared SELECT policies (fixes 73 initplan + 66 multiple-permissive warnings)
 -- 3) indexes for 12 unindexed foreign keys
 -- 4) revoke public EXECUTE on SECURITY DEFINER functions
--- Run on a branch first. Wrapped in one transaction.
+-- Applied via Supabase apply_migration after a rolled-back dry run against production.
 
 begin;
 

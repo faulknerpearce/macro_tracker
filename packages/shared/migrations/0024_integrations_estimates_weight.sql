@@ -1,4 +1,4 @@
--- 0024_integrations_estimates_weight.sql  (PROPOSED — not applied)
+-- 0024_integrations_estimates_weight.sql  (applied to production 2026-11-15)
 -- Fitness tracker connections (Google Health first), provenance on food/activity logs
 -- (weighed vs unit vs estimate, who logged it), weight history and check-in cadence.
 -- Self-contained: safe to run whether or not 0020–0023 have been applied.
