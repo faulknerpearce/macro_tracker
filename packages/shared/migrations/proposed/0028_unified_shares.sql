@@ -1,4 +1,4 @@
--- 0023_unified_shares.sql  (PROPOSED — not applied)
+-- 0028_unified_shares.sql  (PROPOSED — not applied)
 -- One shares table for every shareable item. Old tables stay until clients switch, then drop.
 
 begin;

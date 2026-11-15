@@ -170,7 +170,7 @@ Tokens expire (~1 hour); refresh after re-login.
 Input Output reads workouts, daily calories, steps and weight from the **Google Health API**
 (the cloud successor to the Fitbit Web API; the Google Fit REST API shuts down in 2026,
 and Health Connect is on-device only). Requires migration
-`packages/shared/migrations/proposed/0024_integrations_estimates_weight.sql`.
+`packages/shared/migrations/0024_integrations_estimates_weight.sql`.
 
 1. In Google Cloud Console, create an OAuth client (Web application) and enable the
    Google Health API. Authorized redirect URI:

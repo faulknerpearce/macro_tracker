@@ -1,7 +1,7 @@
 -- 0024_integrations_estimates_weight.sql  (applied to production 2026-11-15)
 -- Fitness tracker connections (Google Health first), provenance on food/activity logs
 -- (weighed vs unit vs estimate, who logged it), weight history and check-in cadence.
--- Self-contained: safe to run whether or not 0020–0023 have been applied.
+-- Self-contained: safe to run whether or not 0025–0028 have been applied.
 
 begin;
 
@@ -62,7 +62,7 @@ alter table public.fitness_connections enable row level security;
 create policy "Own fitness connections" on public.fitness_connections for all to authenticated
   using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
 
--- ── Daily metrics from trackers (same definition as 0021) ────────────────────
+-- ── Daily metrics from trackers (same definition as 0026) ────────────────────
 create table if not exists public.daily_metrics (
   user_id uuid not null references auth.users (id) on delete cascade,
   metric_date date not null,
@@ -79,7 +79,7 @@ create policy "Own daily metrics" on public.daily_metrics for all to authenticat
   using (user_id = (select auth.uid())) with check (user_id = (select auth.uid()));
 alter table public.daily_metrics add column if not exists source text not null default 'manual';
 
--- ── Weight history (same definition as 0021, plus sync de-duplication) ───────
+-- ── Weight history (same definition as 0026, plus sync de-duplication) ───────
 create table if not exists public.body_measurements (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,

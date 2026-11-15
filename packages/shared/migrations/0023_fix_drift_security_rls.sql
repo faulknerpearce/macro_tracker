@@ -1,4 +1,4 @@
--- 0019_fix_drift_security_rls.sql  (applied to production 2026-11-15)
+-- 0023_fix_drift_security_rls.sql  (recorded in Supabase as 0019_fix_drift_security_rls)  (applied to production 2026-11-15)
 -- Generated from the live project's pg_policies on 2026-11-15.
 -- 1) applies 0017 (gender, bmr_override) which production is missing
 -- 2) RLS: evaluate auth.uid() once per query, scope policies to `authenticated`,

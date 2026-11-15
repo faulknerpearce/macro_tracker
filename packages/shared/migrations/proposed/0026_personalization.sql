@@ -1,4 +1,4 @@
--- 0021_personalization.sql  (PROPOSED — not applied)
+-- 0026_personalization.sql  (PROPOSED — not applied)
 -- Tracked nutrients with goal types, net target, objectives, weight history, daily metrics.
 
 begin;

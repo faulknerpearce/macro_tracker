@@ -1,4 +1,4 @@
--- 0020_food_catalog.sql  (PROPOSED — not applied)
+-- 0025_food_catalog.sql  (PROPOSED — not applied)
 -- One catalog of foods used by recipes and entries. Entries keep their macro snapshot.
 -- Global foods (owner_id null) = generic ingredients. Scanned barcode products are per user.
 -- Non-destructive: `ingredients` stays in place until clients move to `foods`.

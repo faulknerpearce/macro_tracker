@@ -1,10 +1,10 @@
--- 0022_data_quality.sql  (PROPOSED — not applied)
+-- 0027_data_quality.sql  (PROPOSED — not applied)
 -- Decimal macros, unknown-vs-zero for optional nutrients, updated_at triggers, sanity view.
 -- Column type changes rewrite the tables (1k rows: instant at today's size).
 
 begin;
 
--- views from 0020 depend on these columns; drop and recreate around the type change
+-- views from 0025 depend on these columns; drop and recreate around the type change
 drop view if exists public.food_save_suggestions;
 drop view if exists public.recipe_totals;
 
