@@ -420,7 +420,7 @@ const handleAmountChange = (index: number, amount: string) => {
               style={{
                 border: 'none',
                 background: 'transparent',
-                color: 'var(--zone-accent)',
+                color: 'var(--mt-text)',
                 fontSize: 13,
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -438,7 +438,7 @@ const handleAmountChange = (index: number, amount: string) => {
               style={{
                 border: 'none',
                 background: 'transparent',
-                color: 'var(--zone-accent)',
+                color: 'var(--mt-text)',
                 fontSize: 13,
                 fontWeight: 500,
                 cursor: 'pointer',

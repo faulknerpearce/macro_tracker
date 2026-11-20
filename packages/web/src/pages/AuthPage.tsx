@@ -1,7 +1,7 @@
 import { useState, type CSSProperties, type FormEvent } from 'react'
 import { Alert, Button, Card } from '../components/ui'
 import { useAuth } from '../context/useAuth'
-import { DASHBOARD_SKY_TOP, neutrals, radius, type, zoneGradients } from '../lib/design-tokens'
+import { calm, neutrals, radius, type, zoneGradients } from '../lib/design-tokens'
 import { inputBase, labelBase } from '../lib/styles'
 
 type Mode = 'signin' | 'signup' | 'forgot'
@@ -139,8 +139,9 @@ export default function AuthPage() {
             width: 44,
             height: 44,
             borderRadius: radius.md,
-            background: DASHBOARD_SKY_TOP,
-            color: 'white',
+            background: calm.panel,
+            border: `1px solid ${calm.line}`,
+            color: calm.text,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

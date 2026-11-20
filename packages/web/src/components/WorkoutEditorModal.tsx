@@ -256,7 +256,7 @@ export default function WorkoutEditorModal({ workout, onSave, onClose }: Workout
             style={{
               border: 'none',
               background: 'transparent',
-              color: 'var(--zone-accent)',
+              color: 'var(--mt-text)',
               fontSize: 13,
               fontWeight: 500,
               cursor: 'pointer',

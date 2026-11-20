@@ -151,7 +151,7 @@ export default function WorkoutViewModal({
           <button
             type="button"
             onClick={() => onShare(workout)}
-            style={{ ...modalFooterButton, color: 'var(--zone-accent)' }}
+            style={{ ...modalFooterButton, color: 'var(--mt-text)' }}
           >
             Share
           </button>
@@ -165,7 +165,7 @@ export default function WorkoutViewModal({
               ...modalPrimaryButton,
               background: savedCopyId ? '#e4e4e7' : savingCopy ? '#6b7280' : 'var(--zone-accent)',
               cursor: savedCopyId ? 'default' : 'pointer',
-              color: savedCopyId ? '#71717a' : 'white',
+              color: savedCopyId ? '#71717a' : savingCopy ? 'white' : 'var(--zone-accent-text)',
             }}
           >
             {savedCopyId ? 'Already saved' : savingCopy ? 'Saving...' : 'Save to my library'}

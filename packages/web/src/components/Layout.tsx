@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/useAuth'
 import { useProfileOptional } from '../context/useProfile'
-import { DASHBOARD_SKY_TOP, zoneCssVars, zoneTokens, type ZoneId } from '../lib/design-tokens'
+import { calm, zoneCssVars, zoneTokens, type ZoneId } from '../lib/design-tokens'
 import {
   primaryNavRoute,
   routeHref,
@@ -92,10 +92,10 @@ export default function Layout({ children, activeRoute }: LayoutProps) {
         background: layoutBg,
         ...zoneCssVars(atmosphere),
         ['--layout-bg' as string]: layoutBg,
-        /* Center tab active fill = dashboard sky top (not zone accent) */
-        ['--nav-center-active' as string]: DASHBOARD_SKY_TOP,
-        ['--nav-center-blue' as string]: DASHBOARD_SKY_TOP,
-        ['--dashboard-sky-top' as string]: DASHBOARD_SKY_TOP,
+        /* Center tab active fill = Calm accent (amber fill, dark icon) */
+        ['--nav-center-active' as string]: calm.accent,
+        ['--nav-center-blue' as string]: calm.accent,
+        ['--dashboard-sky-top' as string]: calm.accent,
       }}
     >
       <nav className="app-nav">
@@ -106,10 +106,7 @@ export default function Layout({ children, activeRoute }: LayoutProps) {
                 className="fa-solid fa-fire app-nav-logo-icon"
                 aria-hidden="true"
                 style={{
-                  color:
-                    atmosphereZone === 'dashboard'
-                      ? DASHBOARD_SKY_TOP
-                      : zoneTokens[atmosphereZone].accent,
+                  color: calm.text,
                 }}
               />
               <span className="app-nav-title">Macro Tracker</span>
@@ -269,9 +266,7 @@ export default function Layout({ children, activeRoute }: LayoutProps) {
           <div className="app-nav-tabs">
             {navTabs.map((tab) => {
               const active = activeNav === tab.route
-              // Dashboard uses sky-top cool slate (same as mobile center control)
-              const accent =
-                tab.route === 'dashboard' ? DASHBOARD_SKY_TOP : zoneTokens[tab.route].accent
+              const accent = zoneTokens[tab.route].accent
               return (
                 <a
                   key={tab.route}

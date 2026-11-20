@@ -171,7 +171,7 @@ function PortionAmountFields({
                 borderRadius: 9999,
                 border: portionUnit === value ? '1px solid var(--zone-accent)' : '1px solid #e4e4e7',
                 background: portionUnit === value ? 'var(--zone-accent)' : 'white',
-                color: portionUnit === value ? 'white' : '#52525b',
+                color: portionUnit === value ? 'var(--zone-accent-text)' : '#52525b',
                 fontSize: 12,
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -531,7 +531,7 @@ export default function AddEntryModal({
                   borderRadius: 9999,
                   border: mode === value ? '1px solid var(--zone-accent)' : '1px solid #e4e4e7',
                   background: mode === value ? 'var(--zone-accent)' : 'white',
-                  color: mode === value ? 'white' : '#52525b',
+                  color: mode === value ? 'var(--zone-accent-text)' : '#52525b',
                   fontSize: 12,
                   fontWeight: 500,
                   cursor: 'pointer',
@@ -626,7 +626,7 @@ export default function AddEntryModal({
                 borderRadius: 9999,
                 border: 'none',
                 background: adding || recipes.length === 0 ? '#6b7280' : 'var(--zone-accent)',
-                color: 'white',
+                color: adding || recipes.length === 0 ? 'white' : 'var(--zone-accent-text)',
                 fontSize: 13,
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -666,7 +666,7 @@ export default function AddEntryModal({
                     borderRadius: 9999,
                     border:
                       selectedIcon.icon === opt.icon
-                        ? '2px solid var(--zone-accent)'
+                        ? '2px solid var(--mt-text)'
                         : '2px solid transparent',
                     background: opt.bg,
                     cursor: 'pointer',
@@ -929,7 +929,7 @@ export default function AddEntryModal({
                 borderRadius: 9999,
                 border: 'none',
                 background: adding ? '#6b7280' : 'var(--zone-accent)',
-                color: 'white',
+                color: adding ? 'white' : 'var(--zone-accent-text)',
                 fontSize: 13,
                 fontWeight: 500,
                 cursor: 'pointer',

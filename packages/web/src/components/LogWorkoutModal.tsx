@@ -312,7 +312,7 @@ export default function LogWorkoutModal({ workout, onLog, onClose }: LogWorkoutM
             borderRadius: 9999,
             border: 'none',
             background: logging || loading ? '#6b7280' : 'var(--zone-accent)',
-            color: 'white',
+            color: logging || loading ? 'white' : 'var(--zone-accent-text)',
             fontSize: 13,
             fontWeight: 500,
             cursor: 'pointer',
