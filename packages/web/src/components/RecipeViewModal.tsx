@@ -144,7 +144,7 @@ export default function RecipeViewModal({
           <button
             type="button"
             onClick={() => onShare(recipe)}
-            style={{ ...modalFooterButton, color: 'var(--zone-accent)' }}
+            style={{ ...modalFooterButton, color: 'var(--mt-text)' }}
           >
             Share
           </button>
@@ -168,7 +168,7 @@ export default function RecipeViewModal({
             disabled={!!savedCopyId || savingCopy}
             style={{
               ...modalFooterButton,
-              color: savedCopyId ? '#71717a' : 'var(--zone-accent)',
+              color: savedCopyId ? '#71717a' : 'var(--mt-text)',
               cursor: savedCopyId ? 'default' : 'pointer',
             }}
           >

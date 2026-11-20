@@ -121,7 +121,7 @@ export default function ActivityLogSection({
                   >
                     <i
                       className={`fa-solid ${icon}`}
-                      style={{ color: 'var(--zone-accent)', fontSize: 15 }}
+                      style={{ color: 'var(--mt-text)', fontSize: 15 }}
                     />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -134,7 +134,7 @@ export default function ActivityLogSection({
                       }}
                     >
                       <span>
-                        <span style={{ fontWeight: 500, color: 'var(--zone-accent)' }}>
+                        <span style={{ fontWeight: 500, color: 'var(--mt-text)' }}>
                           {formatDuration(item.movingTimeSeconds)}
                         </span>{' '}
                         <span style={{ color: neutrals.textFaint }}>duration</span>

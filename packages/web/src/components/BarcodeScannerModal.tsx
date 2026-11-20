@@ -269,7 +269,7 @@ export default function BarcodeScannerModal({
               borderRadius: 12,
               border: '1px solid var(--zone-accent)',
               background: 'var(--zone-accent)',
-              color: 'white',
+              color: 'var(--zone-accent-text)',
               fontSize: 13,
               fontWeight: 500,
               cursor: lookingUp ? 'not-allowed' : 'pointer',

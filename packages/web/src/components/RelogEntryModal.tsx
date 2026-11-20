@@ -238,7 +238,7 @@ export default function RelogEntryModal({
                 border:
                   effectiveUnit === value ? '1px solid var(--zone-accent)' : '1px solid #e4e4e7',
                 background: effectiveUnit === value ? 'var(--zone-accent)' : 'white',
-                color: effectiveUnit === value ? 'white' : '#52525b',
+                color: effectiveUnit === value ? 'var(--zone-accent-text)' : '#52525b',
                 fontSize: 12,
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -311,7 +311,7 @@ export default function RelogEntryModal({
             borderRadius: 9999,
             border: 'none',
             background: logging ? '#6b7280' : 'var(--zone-accent)',
-            color: 'white',
+            color: logging ? 'white' : 'var(--zone-accent-text)',
             fontSize: 13,
             fontWeight: 500,
             cursor: 'pointer',

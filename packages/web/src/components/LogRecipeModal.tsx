@@ -143,7 +143,7 @@ export default function LogRecipeModal({
             borderRadius: 9999,
             border: 'none',
             background: logging ? '#6b7280' : 'var(--zone-accent)',
-            color: 'white',
+            color: logging ? 'white' : 'var(--zone-accent-text)',
             fontSize: 13,
             fontWeight: 500,
             cursor: 'pointer',

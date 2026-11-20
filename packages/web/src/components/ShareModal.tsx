@@ -251,10 +251,10 @@ export default function ShareModal({
                   padding: '12px 14px',
                   borderRadius: 12,
                   border: selected
-                    ? '2px solid var(--zone-accent)'
+                    ? '2px solid var(--mt-text)'
                     : '1px solid #e4e4e7',
                   background: selected
-                    ? 'color-mix(in srgb, var(--zone-accent) 10%, white)'
+                    ? 'var(--mt-bg)'
                     : 'white',
                   cursor: 'pointer',
                   textAlign: 'left',
@@ -272,7 +272,7 @@ export default function ShareModal({
                   style={{
                     fontSize: 12,
                     fontWeight: 600,
-                    color: selected ? 'var(--zone-accent)' : '#a1a1aa',
+                    color: selected ? 'var(--mt-text)' : '#a1a1aa',
                   }}
                 >
                   {selected ? 'Selected' : 'Select'}

@@ -165,7 +165,7 @@ export default function NetBalanceCard({ balance, hasActivities }: NetBalanceCar
               fontSize: 11,
               fontWeight: 600,
               letterSpacing: '1.5px',
-              color: 'var(--zone-accent)',
+              color: 'var(--mt-text)',
               textTransform: 'uppercase',
               margin: '0 0 16px 0',
             }}

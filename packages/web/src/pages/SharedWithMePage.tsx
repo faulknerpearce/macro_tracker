@@ -646,7 +646,7 @@ export default function SharedWithMePage() {
                 borderRadius: 14,
                 border: 'none',
                 background: 'var(--zone-accent)',
-                color: 'white',
+                color: 'var(--zone-accent-text)',
                 fontSize: 14,
                 fontWeight: 500,
                 cursor: 'pointer',

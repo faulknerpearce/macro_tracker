@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import { useZoneTheme } from '../../context/useZoneTheme'
-import { neutrals, radius, status } from '../../lib/design-tokens'
+import { calm, neutrals, radius, status } from '../../lib/design-tokens'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline'
 export type ButtonSize = 'sm' | 'md'
@@ -39,8 +39,8 @@ export default function Button({
       : variant === 'outline'
         ? {
             background: neutrals.surface,
-            color: zone.accent,
-            border: `1px solid ${zone.accent}`,
+            color: calm.text,
+            border: `1px solid ${calm.text}`,
           }
         : variant === 'danger'
           ? {

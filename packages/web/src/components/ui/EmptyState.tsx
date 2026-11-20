@@ -26,7 +26,7 @@ export default function EmptyState({ icon, title, description, action }: EmptySt
             margin: '0 auto 14px',
             borderRadius: radius.pill,
             background: 'var(--zone-accent-muted, #f4f4f5)',
-            color: 'var(--zone-accent, #52525b)',
+            color: 'var(--mt-text, #52525b)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

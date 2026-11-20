@@ -141,39 +141,34 @@ export const atmosphere = {
 } as const
 
 /**
- * Soft zone atmospheres — light washes, not full-bleed skies.
- * Zone identity comes from accent + subtle page tint, not saturated gradients.
+ * Calm design system tokens, as CSS variables defined in index.css :root
+ * (source: docs/design-system/calm.html). Use these instead of hex values.
  */
-/** White canvas for zone washes so light-neutral content boxes stay distinct. */
-const ZONE_WASH_BASE = '#FFFFFF'
+export const calm = {
+  text: 'var(--mt-text)',
+  textSecondary: 'var(--mt-text-secondary)',
+  quiet: 'var(--mt-quiet)',
+  line: 'var(--mt-line)',
+  bg: 'var(--mt-bg)',
+  panel: 'var(--mt-panel)',
+  data: 'var(--mt-data)',
+  dataMuted: 'var(--mt-data-muted)',
+  dataLight: 'var(--mt-data-light)',
+  dataFaint: 'var(--mt-data-faint)',
+  accent: 'var(--mt-accent)',
+  over: 'var(--mt-over)',
+  overText: 'var(--mt-over-text)',
+} as const
 
+/**
+ * Zone backgrounds. Calm uses one flat screen background everywhere, so every
+ * zone gets the same value (kept per zone so callers don't change).
+ */
 export const zoneGradients: Record<ZoneId, string> = {
-  dashboard: `linear-gradient(
-    180deg,
-    color-mix(in srgb, ${ZONE_BLUE} 11%, ${ZONE_WASH_BASE}) 0%,
-    color-mix(in srgb, ${ZONE_BLUE} 4%, ${ZONE_WASH_BASE}) 42%,
-    ${ZONE_WASH_BASE} 100%
-  )`,
-  /** Fueling — soft green wash over white */
-  inputs: `linear-gradient(
-    180deg,
-    color-mix(in srgb, ${ZONE_INPUT} 11%, ${ZONE_WASH_BASE}) 0%,
-    color-mix(in srgb, ${ZONE_INPUT} 4%, ${ZONE_WASH_BASE}) 42%,
-    ${ZONE_WASH_BASE} 100%
-  )`,
-  /** Burning — soft yellow wash over white */
-  outputs: `linear-gradient(
-    180deg,
-    color-mix(in srgb, ${ZONE_OUTPUT} 12%, ${ZONE_WASH_BASE}) 0%,
-    color-mix(in srgb, ${ZONE_OUTPUT} 4%, ${ZONE_WASH_BASE}) 42%,
-    ${ZONE_WASH_BASE} 100%
-  )`,
-  profile: `linear-gradient(
-    180deg,
-    color-mix(in srgb, ${NEUTRAL_DARK} 3%, ${ZONE_WASH_BASE}) 0%,
-    ${ZONE_WASH_BASE} 50%,
-    ${ZONE_WASH_BASE} 100%
-  )`,
+  dashboard: calm.bg,
+  inputs: calm.bg,
+  outputs: calm.bg,
+  profile: calm.bg,
 }
 
 /**
@@ -216,57 +211,31 @@ export interface ZoneTokens {
   onSkyMuted: string
 }
 
+/**
+ * Calm zone tokens: amber is only ever a fill with dark text (buttons, active
+ * tabs, selected states); labels, borders and backgrounds are neutral. Zones
+ * share one look; ZoneId stays so routing and layout code don't change.
+ */
+function calmZone(id: ZoneId): ZoneTokens {
+  return {
+    id,
+    accent: calm.accent,
+    accentMuted: calm.line,
+    accentText: calm.text,
+    bg: zoneGradients[id],
+    cardBg: calm.panel,
+    cardBorder: calm.line,
+    eyebrow: calm.textSecondary,
+    onSky: calm.text,
+    onSkyMuted: calm.textSecondary,
+  }
+}
+
 export const zoneTokens: Record<ZoneId, ZoneTokens> = {
-  dashboard: {
-    id: 'dashboard',
-    accent: ZONE_BLUE,
-    accentMuted: 'rgba(12, 65, 151, 0.14)',
-    accentText: '#ffffff',
-    bg: zoneGradients.dashboard,
-    cardBg: neutrals.surface,
-    cardBorder: 'rgba(12, 65, 151, 0.14)',
-    eyebrow: ZONE_BLUE_DEEP,
-    onSky: onSky.text,
-    onSkyMuted: onSky.textMuted,
-  },
-  inputs: {
-    id: 'inputs',
-    // Fuel / nourish — green #008957
-    accent: ZONE_INPUT,
-    accentMuted: 'rgba(0, 137, 87, 0.14)',
-    accentText: '#ffffff',
-    bg: zoneGradients.inputs,
-    cardBg: neutrals.surface,
-    cardBorder: 'rgba(0, 137, 87, 0.16)',
-    eyebrow: ZONE_INPUT_DEEP,
-    onSky: onSky.text,
-    onSkyMuted: onSky.textMuted,
-  },
-  outputs: {
-    id: 'outputs',
-    // Burn / effort — yellow #E89830 (dark label text for contrast on yellow CTAs)
-    accent: ZONE_OUTPUT,
-    accentMuted: 'rgba(232, 152, 48, 0.16)',
-    accentText: NEUTRAL_DARK,
-    bg: zoneGradients.outputs,
-    cardBg: neutrals.surface,
-    cardBorder: 'rgba(232, 152, 48, 0.22)',
-    eyebrow: ZONE_OUTPUT_DEEP,
-    onSky: onSky.text,
-    onSkyMuted: onSky.textMuted,
-  },
-  profile: {
-    id: 'profile',
-    accent: '#3A3C3B',
-    accentMuted: 'rgba(7, 8, 8, 0.1)',
-    accentText: '#ffffff',
-    bg: zoneGradients.profile,
-    cardBg: neutrals.surface,
-    cardBorder: 'rgba(7, 8, 8, 0.08)',
-    eyebrow: '#4A4C4B',
-    onSky: onSky.text,
-    onSkyMuted: onSky.textMuted,
-  },
+  dashboard: calmZone('dashboard'),
+  inputs: calmZone('inputs'),
+  outputs: calmZone('outputs'),
+  profile: calmZone('profile'),
 }
 
 export function zoneCssVars(zone: ZoneTokens): Record<string, string> {

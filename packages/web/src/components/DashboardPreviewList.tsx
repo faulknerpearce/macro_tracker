@@ -44,7 +44,7 @@ export default function DashboardPreviewList({
           style={{
             fontSize: 12,
             fontWeight: 500,
-            color: 'var(--zone-accent)',
+            color: 'var(--mt-text)',
             textDecoration: 'none',
           }}
         >
