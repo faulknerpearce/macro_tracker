@@ -260,7 +260,7 @@ export default function RecipesPage({ onOpenCreateReady }: RecipesPageProps) {
                 background: 'none',
                 border: 'none',
                 padding: 0,
-                color: 'var(--zone-accent)',
+                color: 'var(--mt-text)',
                 fontWeight: 500,
                 cursor: 'pointer',
                 textDecoration: 'underline',
